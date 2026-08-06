@@ -95,7 +95,6 @@
             opacity: 0.8;
         }
 
-        /* Streaming Platforms Dropdown Menu */
         .dropdown {
             position: relative;
         }
@@ -245,7 +244,7 @@
             background: rgba(245, 197, 24, 0.12);
             color: var(--gold);
             border: 1px solid rgba(245, 197, 24, 0.3);
-            margin-bottom: 1rem;
+            margin-bottom: 0.6rem;
         }
 
         .menu-item.app-highlight:hover {
@@ -327,6 +326,38 @@
             max-width: 1380px;
             margin: 0 auto;
             padding: 1.5rem 1rem;
+        }
+
+        /* Continue Watching Widget */
+        .continue-widget {
+            display: none;
+            background: linear-gradient(90deg, #181c26 0%, #1e293b 100%);
+            border: 1px solid var(--red-primary);
+            border-radius: 12px;
+            padding: 0.8rem 1.2rem;
+            margin-bottom: 1.5rem;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .continue-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: #cbd5e1;
+        }
+
+        .continue-btn {
+            background: var(--red-primary);
+            color: #fff;
+            border: none;
+            padding: 0.4rem 1.2rem;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            cursor: pointer;
         }
 
         /* Featured Slider Section */
@@ -428,7 +459,7 @@
         /* Quick Action Buttons Grid */
         .quick-buttons {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 12px;
             margin-bottom: 2rem;
         }
@@ -440,7 +471,7 @@
             border-radius: 12px;
             color: #fff;
             font-weight: 900;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -456,6 +487,17 @@
 
         .quick-btn.active {
             background: var(--red-primary);
+        }
+
+        .quick-btn.random-btn {
+            background: rgba(245, 197, 24, 0.15);
+            color: var(--gold);
+            border: 1px solid rgba(245, 197, 24, 0.4);
+        }
+
+        .quick-btn.random-btn:hover {
+            background: var(--gold);
+            color: #000;
         }
 
         /* Filter Dropdowns Card */
@@ -531,6 +573,24 @@
             padding: 4px 10px;
             border-radius: 6px;
             z-index: 5;
+        }
+
+        .card-fav-btn {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: rgba(0, 0, 0, 0.7);
+            border: none;
+            color: #fff;
+            font-size: 1rem;
+            padding: 4px 8px;
+            border-radius: 50%;
+            z-index: 5;
+            cursor: pointer;
+        }
+
+        .card-fav-btn.active {
+            color: #e50914;
         }
 
         .poster-img {
@@ -709,6 +769,65 @@
             margin-left: 6px;
         }
 
+        /* Comments Section Styling */
+        .comments-section {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .comments-title {
+            font-size: 1.1rem;
+            font-weight: 900;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .comment-input-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1.2rem;
+        }
+
+        .comment-input-box input {
+            flex: 1;
+            background: #0d1017;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            color: #fff;
+            outline: none;
+        }
+
+        .comment-input-box button {
+            background: var(--red-primary);
+            color: #fff;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .comments-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .comment-card {
+            background: #0d1017;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            font-size: 0.88rem;
+        }
+
+        .comment-author {
+            color: var(--gold);
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
         /* Footer & Legal Links */
         footer {
             background: #080a0e;
@@ -805,7 +924,7 @@
 </head>
 <body>
 
-    <!-- 1. Top Red Bar -->
+    <!-- Top Red Bar -->
     <div class="top-nav">
         <div class="top-nav-right">
             <button class="menu-btn" onclick="toggleDrawer()">☰ القائمة</button>
@@ -841,6 +960,7 @@
 
         <div class="menu-section">
             <a class="menu-item app-highlight" onclick="triggerAppInstall()">📱 تثبيت التطبيق على الجوال</a>
+            <a class="menu-item" onclick="showWatchlist()">❤️ قائمة المفضلة الخاص بي</a>
             <a class="menu-item" onclick="filterCategory('latest')">المضاف حديثاً (أحدث الإضافات)</a>
         </div>
 
@@ -880,7 +1000,7 @@
         </div>
     </div>
 
-    <!-- 2. Main Brand & Search -->
+    <!-- Main Brand & Search -->
     <div class="brand-header">
         <a class="site-logo" onclick="resetToHome()">Good<span>Night</span></a>
         <div class="search-container">
@@ -891,22 +1011,32 @@
 
     <div class="main-container">
 
-        <!-- 3. Featured Slider -->
+        <!-- Continue Watching Widget -->
+        <div class="continue-widget" id="continueWidget">
+            <div class="continue-info">
+                <span>🍿 <strong>استكمال المشاهدة:</strong></span>
+                <span id="continueTitle"></span>
+            </div>
+            <button class="continue-btn" onclick="resumeLastWatched()">متابعة الآن ➔</button>
+        </div>
+
+        <!-- Featured Slider -->
         <div class="slider-section">
             <button class="slider-arrow arrow-right" onclick="scrollSlider(300)">❯</button>
             <button class="slider-arrow arrow-left" onclick="scrollSlider(-300)">❮</button>
             <div class="slider-container" id="sliderContainer"></div>
         </div>
 
-        <!-- 4. Quick Filter Buttons -->
+        <!-- Quick Filter Buttons -->
         <div class="quick-buttons">
             <button class="quick-btn active" id="btnLatest" onclick="filterCategory('latest')">🔴 الأحدث</button>
             <button class="quick-btn" id="btnTop" onclick="filterCategory('movie', '', '', 'vote_average.desc')">⭐ الأعلى تقييماً</button>
             <button class="quick-btn" id="btnPopular" onclick="filterCategory('movie', '', '', 'popularity.desc')">👁️ الأكثر مشاهدة</button>
             <button class="quick-btn" id="btnAnime" onclick="filterCategory('anime')">🎌 قسم الأنمي</button>
+            <button class="quick-btn random-btn" onclick="getRandomMovie()">🎲 اقترح لي عملاً</button>
         </div>
 
-        <!-- 5. Filter Dropdowns Bar -->
+        <!-- Filter Dropdowns Card -->
         <div class="filter-box">
             <div class="filter-grid">
                 <select class="filter-select" id="countrySelect" onchange="applyFilters(true)">
@@ -948,14 +1078,14 @@
             </div>
         </div>
 
-        <!-- 6. Content Grid -->
+        <!-- Content Grid -->
         <h2 class="section-header-title" id="gridTitle">المضاف حديثاً</h2>
         <div class="content-grid" id="moviesGrid"></div>
 
         <button class="load-more-btn" id="loadMoreBtn" onclick="loadNextPage()">تحميل المزيد 🔄</button>
     </div>
 
-    <!-- 7. Modal Player Window -->
+    <!-- Modal Player Window -->
     <div class="modal" id="movieModal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
@@ -996,17 +1126,29 @@
 
                     <button class="nav-ep-btn" onclick="changeEpisode(1)">الحلقة التالية ➔</button>
                 </div>
+
+                <button class="nav-ep-btn" id="modalFavBtn" onclick="toggleCurrentFav()" style="background:#1e293b; border:1px solid rgba(255,255,255,0.2);">❤️ للمفضلة</button>
             </div>
 
             <div class="modal-details">
                 <h2 id="modalTitle" style="color: var(--red-primary); font-size: 1.5rem;"></h2>
                 <div id="modalMeta"></div>
                 <p id="modalOverview" style="margin-top: 0.8rem; color: var(--text-muted); line-height: 1.7;"></p>
+
+                <!-- Interactive Comments Section -->
+                <div class="comments-section">
+                    <div class="comments-title">💬 آراء وانطباعات المشاهدين</div>
+                    <div class="comment-input-box">
+                        <input type="text" id="commentText" placeholder="اكتب رأيك أو تقييمك للعمل هنا...">
+                        <button onclick="addComment()">إرسال</button>
+                    </div>
+                    <div class="comments-list" id="commentsList"></div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- 8. Legal Modal Window -->
+    <!-- Legal Modal Window -->
     <div class="modal" id="legalModal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeLegalModal()">&times;</span>
@@ -1045,6 +1187,8 @@
         let isSearching = false;
         let currentSearchQuery = '';
         let deferredPrompt = null;
+        let watchlist = JSON.parse(localStorage.getItem('myWatchlist') || '[]');
+        let lastWatched = JSON.parse(localStorage.getItem('lastWatched') || 'null');
 
         const moviesGrid = document.getElementById('moviesGrid');
         const sliderContainer = document.getElementById('sliderContainer');
@@ -1069,6 +1213,9 @@
         const loadMoreBtn = document.getElementById('loadMoreBtn');
         const sideDrawer = document.getElementById('sideDrawer');
         const drawerOverlay = document.getElementById('drawerOverlay');
+        const continueWidget = document.getElementById('continueWidget');
+        const continueTitle = document.getElementById('continueTitle');
+        const commentsList = document.getElementById('commentsList');
 
         if (localStorage.getItem('cookiesAccepted')) {
             cookieBanner.style.display = 'none';
@@ -1077,6 +1224,114 @@
         function acceptCookies() {
             localStorage.setItem('cookiesAccepted', 'true');
             cookieBanner.style.display = 'none';
+        }
+
+        // Check Continue Watching Status
+        function checkContinueWatching() {
+            if (lastWatched) {
+                continueTitle.innerText = `${lastWatched.title} (${lastWatched.type === 'tv' ? 'مسلسل' : 'فيلم'})`;
+                continueWidget.style.display = 'flex';
+            } else {
+                continueWidget.style.display = 'none';
+            }
+        }
+
+        function resumeLastWatched() {
+            if (lastWatched) {
+                currentType = lastWatched.type;
+                openPlayer(lastWatched.item);
+            }
+        }
+
+        // Randomizer Feature
+        async function getRandomMovie() {
+            try {
+                const randomPage = Math.floor(Math.random() * 5) + 1;
+                const res = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&language=ar-SA&sort_by=vote_average.desc&vote_count.gte=300&page=${randomPage}`);
+                const data = await res.json();
+                if (data.results && data.results.length > 0) {
+                    const randomItem = data.results[Math.floor(Math.random() * data.results.length)];
+                    currentType = 'movie';
+                    openPlayer(randomItem);
+                }
+            } catch (e) {
+                console.error('Randomizer error:', e);
+            }
+        }
+
+        // Watchlist Functions
+        function toggleFav(item, type, e) {
+            if (e) e.stopPropagation();
+            const index = watchlist.findIndex(x => x.id === item.id && x.type === type);
+            if (index > -1) {
+                watchlist.splice(index, 1);
+            } else {
+                watchlist.push({ id: item.id, item: item, type: type });
+            }
+            localStorage.setItem('myWatchlist', JSON.stringify(watchlist));
+            if (gridTitle.innerText === "قائمة المفضلة الخاص بي") {
+                showWatchlist();
+            } else {
+                applyFilters(false);
+            }
+        }
+
+        function toggleCurrentFav() {
+            if (currentItem) {
+                toggleFav(currentItem, currentType, null);
+                updateModalFavBtn();
+            }
+        }
+
+        function updateModalFavBtn() {
+            const modalFavBtn = document.getElementById('modalFavBtn');
+            const isFav = watchlist.some(x => x.id === currentItem.id && x.type === currentType);
+            modalFavBtn.innerText = isFav ? '❤️ مضاف للمفضلة' : '🖤 إضافة للمفضلة';
+            modalFavBtn.style.color = isFav ? '#e50914' : '#fff';
+        }
+
+        function showWatchlist() {
+            if (sideDrawer && sideDrawer.classList.contains('active')) toggleDrawer();
+            gridTitle.innerText = "قائمة المفضلة الخاص بي";
+            moviesGrid.innerHTML = '';
+            if (watchlist.length === 0) {
+                moviesGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 2rem;">لم تقم بإضافة أي أعمال لقائمة المفضلة بعد.</p>';
+                loadMoreBtn.style.display = 'none';
+                return;
+            }
+            watchlist.forEach((w, index) => {
+                currentType = w.type;
+                displaySingleCard(w.item, index);
+            });
+            loadMoreBtn.style.display = 'none';
+        }
+
+        // Comments System
+        function loadComments(itemId) {
+            const comments = JSON.parse(localStorage.getItem(`comments_${itemId}`) || '[]');
+            commentsList.innerHTML = '';
+            if (comments.length === 0) {
+                commentsList.innerHTML = '<p style="color:var(--text-muted); font-size:0.85rem;">كن أول من يكتب رأياً عن هذا العمل!</p>';
+                return;
+            }
+            comments.forEach(c => {
+                const card = document.createElement('div');
+                card.className = 'comment-card';
+                card.innerHTML = `<div class="comment-author">${c.author}</div><div>${c.text}</div>`;
+                commentsList.appendChild(card);
+            });
+        }
+
+        function addComment() {
+            const input = document.getElementById('commentText');
+            const text = input.value.trim();
+            if (text && currentItem) {
+                const comments = JSON.parse(localStorage.getItem(`comments_${currentItem.id}`) || '[]');
+                comments.unshift({ author: 'مشاهد GoodNight', text: text });
+                localStorage.setItem(`comments_${currentItem.id}`, JSON.stringify(comments));
+                input.value = '';
+                loadComments(currentItem.id);
+            }
         }
 
         window.addEventListener('beforeinstallprompt', (e) => {
@@ -1089,9 +1344,7 @@
 
             if (deferredPrompt) {
                 deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    deferredPrompt = null;
-                });
+                deferredPrompt.userChoice.then(() => { deferredPrompt = null; });
             } else {
                 legalModalContent.innerHTML = `
                     <h3>📱 طريقة تثبيت تطبيق GoodNight على جوالك</h3>
@@ -1322,31 +1575,37 @@
             }
 
             items.forEach((item, index) => {
-                if (!item.poster_path) return;
-                const title = item.title || item.name;
-                const releaseYear = (item.release_date || item.first_air_date || '').substring(0, 4);
-                const badgeId = `badge-${currentType}-${item.id}-${index}`;
-
-                const card = document.createElement('div');
-                card.className = 'content-card';
-                card.innerHTML = `
-                    <div class="card-badge" id="${badgeId}">${currentType === 'tv' ? 'حلقة ...' : 'HD'}</div>
-                    <img class="poster-img" src="${IMG_URL + item.poster_path}" alt="${title}">
-                    <div class="card-body">
-                        <div class="card-title">${title}</div>
-                        <div class="card-meta">
-                            <span class="card-rating">★ ${item.vote_average ? item.vote_average.toFixed(1) : 'N/A'}</span>
-                            <span>${releaseYear}</span>
-                        </div>
-                    </div>
-                `;
-                card.onclick = () => openPlayer(item);
-                moviesGrid.appendChild(card);
-
-                if (currentType === 'tv') {
-                    fetchTvBadgeInfo(item.id, badgeId);
-                }
+                displaySingleCard(item, index);
             });
+        }
+
+        function displaySingleCard(item, index) {
+            if (!item.poster_path) return;
+            const title = item.title || item.name;
+            const releaseYear = (item.release_date || item.first_air_date || '').substring(0, 4);
+            const badgeId = `badge-${currentType}-${item.id}-${index}`;
+            const isFav = watchlist.some(x => x.id === item.id && x.type === currentType);
+
+            const card = document.createElement('div');
+            card.className = 'content-card';
+            card.innerHTML = `
+                <button class="card-fav-btn ${isFav ? 'active' : ''}" onclick="toggleFav(${JSON.stringify(item).replace(/"/g, '&quot;')}, '${currentType}', event)">${isFav ? '❤️' : '🤍'}</button>
+                <div class="card-badge" id="${badgeId}">${currentType === 'tv' ? 'حلقة ...' : 'HD'}</div>
+                <img class="poster-img" src="${IMG_URL + item.poster_path}" alt="${title}">
+                <div class="card-body">
+                    <div class="card-title">${title}</div>
+                    <div class="card-meta">
+                        <span class="card-rating">★ ${item.vote_average ? item.vote_average.toFixed(1) : 'N/A'}</span>
+                        <span>${releaseYear}</span>
+                    </div>
+                </div>
+            `;
+            card.onclick = () => openPlayer(item);
+            moviesGrid.appendChild(card);
+
+            if (currentType === 'tv') {
+                fetchTvBadgeInfo(item.id, badgeId);
+            }
         }
 
         async function fetchTvBadgeInfo(id, badgeId) {
@@ -1371,12 +1630,20 @@
 
         async function openPlayer(item) {
             currentItem = item;
-            modalTitle.innerText = item.title || item.name;
+            const title = item.title || item.name;
+            modalTitle.innerText = title;
             modalOverview.innerText = item.overview || "لا يوجد وصف متاح حالياً لهذا العمل.";
             modalMeta.innerHTML = '<p style="color: var(--text-muted); font-size: 0.85rem;">جاري تحميل التفاصيل...</p>';
             
             serverSelect.value = "vidlink";
 
+            // Save Continue Watching
+            lastWatched = { title: title, type: currentType, item: item };
+            localStorage.setItem('lastWatched', JSON.stringify(lastWatched));
+            checkContinueWatching();
+
+            updateModalFavBtn();
+            loadComments(item.id);
             fetchFullDetails(item.id, currentType);
 
             if (currentType === 'tv') {
@@ -1570,6 +1837,7 @@
         });
 
         // Initialize
+        checkContinueWatching();
         loadSliderItems();
         filterCategory('latest');
     </script>
