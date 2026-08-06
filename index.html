@@ -79,7 +79,7 @@
             padding: 0.4rem 1rem;
             border: 1px solid rgba(255, 255, 255, 0.1);
             width: 100%;
-            max-width: 320px;
+            max-width: 300px;
         }
 
         .search-box input {
@@ -92,18 +92,45 @@
             font-size: 0.95rem;
         }
 
-        .hero {
-            position: relative;
-            height: 30vh;
-            background: linear-gradient(to top, var(--bg-color), transparent), url('https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?q=80&w=1200') center/cover;
+        /* Filter Controls Bar */
+        .filter-section {
+            background: #131921;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             display: flex;
-            align-items: flex-end;
-            padding: 2rem;
-            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-group label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .filter-group select {
+            background: var(--card-bg);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            outline: none;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .filter-group select:focus {
+            border-color: var(--accent-color);
         }
 
         .container {
-            padding: 0 2rem 3rem 2rem;
+            padding: 2rem;
         }
 
         .section-title {
@@ -246,16 +273,54 @@
             <button class="tab-btn" id="tvTab" onclick="switchType('tv')">📺 مسلسلات</button>
         </div>
         <div class="search-box">
-            <input type="text" id="searchInput" placeholder="ابحث عن فيلم أو مسلسل...">
+            <input type="text" id="searchInput" placeholder="ابحث بالاسم...">
         </div>
     </header>
 
-    <section class="hero">
-        <div>
-            <h1 style="font-size: 2.2rem;" id="heroTitle">سهرة الليلة على GoodNight</h1>
-            <p style="color: var(--text-muted);" id="heroSub">استكشف أحدث الأفلام والمسلسلات العالمية المترجمة.</p>
+    <!-- Filter Section -->
+    <div class="filter-section">
+        <div class="filter-group">
+            <label>التصنيف:</label>
+            <select id="genreSelect" onchange="applyFilters()">
+                <option value="">جميع التصنيفات</option>
+                <option value="28">أكشن</option>
+                <option value="27">رعب</option>
+                <option value="35">كوميدي</option>
+                <option value="18">دراما</option>
+                <option value="80">جريمة</option>
+                <option value="878">خيال علمي</option>
+                <option value="16">أنيميشن</option>
+                <option value="10749">رومانسي</option>
+                <option value="9648">غموض</option>
+                <option value="53">إثارة</option>
+            </select>
         </div>
-    </section>
+
+        <div class="filter-group">
+            <label>سنة الإنتاج:</label>
+            <select id="yearSelect" onchange="applyFilters()">
+                <option value="">جميع السنوات</option>
+                <option value="2026">2026</option>
+                <option value="2025">2025</option>
+                <option value="2024">2024</option>
+                <option value="2023">2023</option>
+                <option value="2022">2022</option>
+                <option value="2021">2021</option>
+                <option value="2020">2020</option>
+                <option value="2019">2019</option>
+                <option value="2018">2018</option>
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <label>الترتيب حسب:</label>
+            <select id="sortSelect" onchange="applyFilters()">
+                <option value="popularity.desc">الأكثر شعبية 🔥</option>
+                <option value="vote_average.desc">الأعلى تقييماً ⭐</option>
+                <option value="primary_release_date.desc">الأحدث إصداراً 🆕</option>
+            </select>
+        </div>
+    </div>
 
     <div class="container">
         <h2 class="section-title" id="gridTitle">الأفلام الأكثر شعبية 🔥</h2>
@@ -271,8 +336,9 @@
                     <label style="font-size: 0.85rem; color: var(--text-muted);">السيرفر:</label>
                     <select id="serverSelect" onchange="updatePlayerSrc()">
                         <option value="vidlink">سيرفر 1 (VidLink)</option>
-                        <option value="embedsu">سيرفر 2 (Embed.su)</option>
-                        <option value="autoembed">سيرفر 3 (AutoEmbed)</option>
+                        <option value="vidsrc">سيرفر 2 (VidSrc)</option>
+                        <option value="vidbinge">سيرفر 3 (VidBinge)</option>
+                        <option value="embedsu">سيرفر 4 (Embed.su)</option>
                     </select>
                 </div>
 
@@ -324,35 +390,54 @@
         const tvControls = document.getElementById('tvControls');
         const moviesTab = document.getElementById('moviesTab');
         const tvTab = document.getElementById('tvTab');
+        const genreSelect = document.getElementById('genreSelect');
+        const yearSelect = document.getElementById('yearSelect');
+        const sortSelect = document.getElementById('sortSelect');
 
         function switchType(type) {
             currentType = type;
             searchInput.value = '';
+            genreSelect.value = '';
+            yearSelect.value = '';
+            sortSelect.value = 'popularity.desc';
+
             if (type === 'movie') {
                 moviesTab.classList.add('active');
                 tvTab.classList.remove('active');
-                gridTitle.innerText = "الأفلام الأكثر شعبية 🔥";
+                gridTitle.innerText = "الأفلام المعروضة 🔥";
             } else {
                 tvTab.classList.add('active');
                 moviesTab.classList.remove('active');
-                gridTitle.innerText = "المسلسلات الأكثر شعبية 🔥";
+                gridTitle.innerText = "المسلسلات المعروضة 🔥";
             }
-            fetchTrending();
+            applyFilters();
         }
 
-        async function fetchTrending() {
+        async function applyFilters() {
+            const genre = genreSelect.value;
+            const year = yearSelect.value;
+            const sort = sortSelect.value;
+
+            let url = `${BASE_URL}/discover/${currentType}?api_key=${API_KEY}&language=ar-SA&include_adult=false&sort_by=${sort}`;
+            
+            if (genre) url += `&with_genres=${genre}`;
+            if (year) {
+                if (currentType === 'movie') url += `&primary_release_year=${year}`;
+                else url += `&first_air_date_year=${year}`;
+            }
+
             try {
-                const res = await fetch(`${BASE_URL}/trending/${currentType}/week?api_key=${API_KEY}&language=ar-SA&include_adult=false`);
+                const res = await fetch(url);
                 const data = await res.json();
                 displayItems(data.results);
             } catch (err) {
-                console.error('Error fetching data:', err);
+                console.error('Error applying filters:', err);
             }
         }
 
         async function searchItems(query) {
             if (!query) {
-                switchType(currentType);
+                applyFilters();
                 return;
             }
             gridTitle.innerText = `نتائج البحث عن: ${query}`;
@@ -367,6 +452,10 @@
 
         function displayItems(items) {
             moviesGrid.innerHTML = '';
+            if (!items || items.length === 0) {
+                moviesGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 2rem;">لا توجد نتائج تطابق التصنيف المختار.</p>';
+                return;
+            }
             items.forEach(item => {
                 if (!item.poster_path) return;
                 const title = item.title || item.name;
@@ -467,14 +556,16 @@
             const server = serverSelect.value;
             if (currentType === 'movie') {
                 if (server === 'vidlink') videoPlayer.src = `https://vidlink.pro/movie/${currentItem.id}`;
+                else if (server === 'vidsrc') videoPlayer.src = `https://vidsrc.cc/v2/embed/movie/${currentItem.id}`;
+                else if (server === 'vidbinge') videoPlayer.src = `https://vidbinge.dev/embed/movie/${currentItem.id}`;
                 else if (server === 'embedsu') videoPlayer.src = `https://embed.su/embed/movie/${currentItem.id}`;
-                else if (server === 'autoembed') videoPlayer.src = `https://player.autoembed.cc/embed/movie/${currentItem.id}`;
             } else {
                 const season = seasonSelect.value || 1;
                 const episode = episodeSelect.value || 1;
                 if (server === 'vidlink') videoPlayer.src = `https://vidlink.pro/tv/${currentItem.id}/${season}/${episode}`;
+                else if (server === 'vidsrc') videoPlayer.src = `https://vidsrc.cc/v2/embed/tv/${currentItem.id}/${season}/${episode}`;
+                else if (server === 'vidbinge') videoPlayer.src = `https://vidbinge.dev/embed/tv/${currentItem.id}/${season}/${episode}`;
                 else if (server === 'embedsu') videoPlayer.src = `https://embed.su/embed/tv/${currentItem.id}/${season}/${episode}`;
-                else if (server === 'autoembed') videoPlayer.src = `https://player.autoembed.cc/embed/tv/${currentItem.id}/${season}/${episode}`;
             }
         }
 
@@ -497,7 +588,7 @@
             }, 500);
         });
 
-        fetchTrending();
+        applyFilters();
     </script>
 </body>
 </html>
