@@ -210,7 +210,7 @@
             box-shadow: 0 0 15px rgba(102, 252, 241, 0.4);
         }
 
-        /* Modal Player */
+        /* Modal Player Window */
         .modal {
             display: none;
             position: fixed;
@@ -240,25 +240,7 @@
             color: #fff;
             cursor: pointer;
             z-index: 10;
-        }
-
-        .controls-bar {
-            padding: 0.8rem 1.5rem;
-            background: #151c24;
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .controls-bar select {
-            background: var(--card-bg);
-            color: #fff;
-            border: 1px solid var(--accent-color);
-            padding: 0.4rem 0.8rem;
-            border-radius: 6px;
-            outline: none;
-            cursor: pointer;
+            text-shadow: 0 0 5px #000;
         }
 
         .player-container {
@@ -273,6 +255,36 @@
             top: 0; left: 0;
             width: 100%; height: 100%;
             border: none;
+        }
+
+        /* Controls bar located below the player */
+        .controls-bar {
+            padding: 1rem 1.5rem;
+            background: #131921;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .controls-bar select {
+            background: var(--card-bg);
+            color: #fff;
+            border: 1px solid var(--accent-color);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            outline: none;
+            cursor: pointer;
+            font-weight: bold;
         }
 
         .modal-details {
@@ -313,7 +325,7 @@
                 <option value="IN">هندي 🇮🇳</option>
                 <option value="JP">ياباني 🇯🇵</option>
                 <option value="CN">صيني 🇨🇳</option>
-                <option value="EG,SA,AE,KW">عربي 🇸🇦🇪🇬</option>
+                <option value="EG,SA,AE,KW">عربي 🇸🇦🇪غت</option>
                 <option value="GB,FR,ES,DE">أوروبي 🇪🇺</option>
             </select>
         </div>
@@ -374,8 +386,15 @@
     <div class="modal" id="movieModal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
+            
+            <!-- 1. Frame Player at the top -->
+            <div class="player-container">
+                <iframe id="videoPlayer" src="" allowfullscreen></iframe>
+            </div>
+
+            <!-- 2. Controls and Server bar below player -->
             <div class="controls-bar">
-                <div>
+                <div class="control-group">
                     <label style="font-size: 0.85rem; color: var(--text-muted);">السيرفر:</label>
                     <select id="serverSelect" onchange="updatePlayerSrc()">
                         <option value="vidlink">سيرفر 1 (VidLink)</option>
@@ -386,21 +405,18 @@
                 </div>
 
                 <div id="tvControls" style="display: none; gap: 10px;">
-                    <div>
+                    <div class="control-group">
                         <label style="font-size: 0.85rem; color: var(--text-muted);">الموسم:</label>
                         <select id="seasonSelect" onchange="onSeasonChange()"></select>
                     </div>
-                    <div>
+                    <div class="control-group">
                         <label style="font-size: 0.85rem; color: var(--text-muted);">الحلقة:</label>
                         <select id="episodeSelect" onchange="updatePlayerSrc()"></select>
                     </div>
                 </div>
             </div>
 
-            <div class="player-container">
-                <iframe id="videoPlayer" src="" allowfullscreen></iframe>
-            </div>
-
+            <!-- 3. Details and Description at the bottom -->
             <div class="modal-details">
                 <h2 id="modalTitle" style="color: var(--accent-color);"></h2>
                 <p id="modalOverview" style="margin-top: 0.5rem; color: var(--text-muted);"></p>
