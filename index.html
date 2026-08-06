@@ -468,6 +468,26 @@
             font-weight: bold;
         }
 
+        /* Episode Navigation Buttons */
+        .nav-ep-btn {
+            background: var(--red-primary);
+            color: #fff;
+            border: none;
+            padding: 0.45rem 1rem;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav-ep-btn:hover {
+            background: var(--red-hover);
+        }
+
         .modal-details {
             padding: 1.5rem;
         }
@@ -508,6 +528,13 @@
             border-top: 1px solid rgba(255, 255, 255, 0.05);
             margin-top: 3rem;
         }
+
+        @media (max-width: 600px) {
+            #tvControls {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 <body>
@@ -537,7 +564,7 @@
 
     <div class="main-container">
 
-        <!-- 3. Featured Slider (الأحدث والحلقات) -->
+        <!-- 3. Featured Slider -->
         <div class="slider-section">
             <button class="slider-arrow arrow-right" onclick="scrollSlider(300)">❯</button>
             <button class="slider-arrow arrow-left" onclick="scrollSlider(-300)">❮</button>
@@ -621,15 +648,21 @@
                     </select>
                 </div>
 
-                <div id="tvControls" style="display: none; gap: 10px;">
+                <!-- TV Controls with Next / Prev buttons -->
+                <div id="tvControls" style="display: none; align-items: center; gap: 8px;">
+                    <button class="nav-ep-btn" onclick="changeEpisode(-1)">⬅ الحلقة السابقة</button>
+
                     <div class="control-group">
                         <label style="font-size: 0.85rem; color: var(--text-muted);">الموسم:</label>
                         <select id="seasonSelect" onchange="onSeasonChange()"></select>
                     </div>
+
                     <div class="control-group">
                         <label style="font-size: 0.85rem; color: var(--text-muted);">الحلقة:</label>
                         <select id="episodeSelect" onchange="updatePlayerSrc()"></select>
                     </div>
+
+                    <button class="nav-ep-btn" onclick="changeEpisode(1)">الحلقة التالية ➔</button>
                 </div>
             </div>
 
@@ -714,7 +747,6 @@
         function filterCategory(type, country = '', genre = '', sort = '', network = '', customTitle = '') {
             currentNetwork = network;
 
-            // Update Active Quick Buttons
             document.querySelectorAll('.quick-btn').forEach(btn => btn.classList.remove('active'));
             if (type === 'latest') document.getElementById('btnLatest').classList.add('active');
 
@@ -970,6 +1002,38 @@
                 }
             }
             updatePlayerSrc();
+        }
+
+        // Navigation between episodes function
+        async function changeEpisode(direction) {
+            if (!currentItem || currentType !== 'tv') return;
+
+            const currentEpIndex = episodeSelect.selectedIndex;
+            const totalEpInSeason = episodeSelect.options.length;
+            const newEpIndex = currentEpIndex + direction;
+
+            if (newEpIndex >= 0 && newEpIndex < totalEpInSeason) {
+                episodeSelect.selectedIndex = newEpIndex;
+                updatePlayerSrc();
+            } else if (direction === 1) {
+                // Next Season
+                const currentSeasonIndex = seasonSelect.selectedIndex;
+                if (currentSeasonIndex < seasonSelect.options.length - 1) {
+                    seasonSelect.selectedIndex = currentSeasonIndex + 1;
+                    await loadEpisodes(currentItem.id, seasonSelect.value);
+                    episodeSelect.selectedIndex = 0;
+                    updatePlayerSrc();
+                }
+            } else if (direction === -1) {
+                // Previous Season
+                const currentSeasonIndex = seasonSelect.selectedIndex;
+                if (currentSeasonIndex > 0) {
+                    seasonSelect.selectedIndex = currentSeasonIndex - 1;
+                    await loadEpisodes(currentItem.id, seasonSelect.value);
+                    episodeSelect.selectedIndex = episodeSelect.options.length - 1;
+                    updatePlayerSrc();
+                }
+            }
         }
 
         function updatePlayerSrc() {
