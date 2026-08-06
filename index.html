@@ -510,19 +510,18 @@
             background: var(--red-primary);
             color: #fff;
             border: none;
-            padding: 0.45rem 1rem;
+            padding: 0.5rem 1.1rem;
             border-radius: 8px;
-            font-weight: bold;
-            font-size: 0.85rem;
+            font-weight: 900;
+            font-size: 0.88rem;
             cursor: pointer;
-            transition: background 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 5px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
         }
 
         .nav-ep-btn:hover {
             background: var(--red-hover);
+            transform: scale(1.03);
         }
 
         .modal-details {
@@ -566,7 +565,7 @@
             margin-top: 3rem;
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 650px) {
             #tvControls {
                 flex-wrap: wrap;
                 justify-content: center;
@@ -688,9 +687,15 @@
                     <label style="font-size: 0.85rem; color: var(--text-muted);">السيرفر:</label>
                     <select id="serverSelect" onchange="updatePlayerSrc()">
                         <option value="vidlink">سيرفر 1 (VidLink)</option>
-                        <option value="vidsrc">سيرفر 2 (VidSrc)</option>
-                        <option value="vidbinge">سيرفر 3 (VidBinge)</option>
-                        <option value="embedsu">سيرفر 4 (Embed.su)</option>
+                        <option value="vidsrc_me">سيرفر 2 (VidSrc Me - للمسلسلات الكلاسيكية)</option>
+                        <option value="vidsrc_cc">سيرفر 3 (VidSrc CC)</option>
+                        <option value="vidsrc_pro">سيرفر 4 (VidSrc Pro)</option>
+                        <option value="autoembed">سيرفر 5 (AutoEmbed)</option>
+                        <option value="embedsu">سيرفر 6 (Embed.su)</option>
+                        <option value="smashystream">سيرفر 7 (SmashyStream)</option>
+                        <option value="twoembed">سيرفر 8 (2Embed)</option>
+                        <option value="vidbinge">سيرفر 9 (VidBinge)</option>
+                        <option value="multiembed">سيرفر 10 (MultiEmbed)</option>
                     </select>
                 </div>
 
@@ -943,6 +948,8 @@
             modalTitle.innerText = item.title || item.name;
             modalOverview.innerText = item.overview || "لا يوجد وصف متاح حالياً لهذا العمل.";
             modalMeta.innerHTML = '<p style="color: var(--text-muted); font-size: 0.85rem;">جاري تحميل التفاصيل...</p>';
+            
+            // اختيار السيرفر الافتراضي
             serverSelect.value = "vidlink";
 
             fetchFullDetails(item.id, currentType);
@@ -1033,7 +1040,14 @@
                     episodes.forEach(e => {
                         const opt = document.createElement('option');
                         opt.value = e.episode_number;
-                        opt.innerText = `الحلقة ${e.episode_number}: ${e.name || ''}`;
+
+                        let epName = e.name ? e.name.trim() : '';
+                        if (!epName || epName === `الحلقة ${e.episode_number}` || epName.toLowerCase() === `episode ${e.episode_number}`) {
+                            opt.innerText = `الحلقة ${e.episode_number}`;
+                        } else {
+                            opt.innerText = `الحلقة ${e.episode_number}: ${epName}`;
+                        }
+                        
                         episodeSelect.appendChild(opt);
                     });
                 }
@@ -1078,21 +1092,42 @@
             }
         }
 
+        // Updated with 10 Streaming Servers
         function updatePlayerSrc() {
             if (!currentItem) return;
             const server = serverSelect.value;
+            const id = currentItem.id;
+            const season = seasonSelect.value || 1;
+            const episode = episodeSelect.value || 1;
+
             if (currentType === 'movie') {
-                if (server === 'vidlink') videoPlayer.src = `https://vidlink.pro/movie/${currentItem.id}`;
-                else if (server === 'vidsrc') videoPlayer.src = `https://vidsrc.cc/v2/embed/movie/${currentItem.id}`;
-                else if (server === 'vidbinge') videoPlayer.src = `https://vidbinge.dev/embed/movie/${currentItem.id}`;
-                else if (server === 'embedsu') videoPlayer.src = `https://embed.su/embed/movie/${currentItem.id}`;
+                switch(server) {
+                    case 'vidlink': videoPlayer.src = `https://vidlink.pro/movie/${id}`; break;
+                    case 'vidsrc_me': videoPlayer.src = `https://vidsrc.me/embed/movie?tmdb=${id}`; break;
+                    case 'vidsrc_cc': videoPlayer.src = `https://vidsrc.cc/v2/embed/movie/${id}`; break;
+                    case 'vidsrc_pro': videoPlayer.src = `https://vidsrc.pro/embed/movie/${id}`; break;
+                    case 'autoembed': videoPlayer.src = `https://player.autoembed.cc/embed/movie/${id}`; break;
+                    case 'embedsu': videoPlayer.src = `https://embed.su/embed/movie/${id}`; break;
+                    case 'smashystream': videoPlayer.src = `https://player.smashy.stream/movie/${id}`; break;
+                    case 'twoembed': videoPlayer.src = `https://www.2embed.cc/embed/${id}`; break;
+                    case 'vidbinge': videoPlayer.src = `https://vidbinge.dev/embed/movie/${id}`; break;
+                    case 'multiembed': videoPlayer.src = `https://multiembed.mov/?video_id=${id}&tmdb=1`; break;
+                    default: videoPlayer.src = `https://vidlink.pro/movie/${id}`;
+                }
             } else {
-                const season = seasonSelect.value || 1;
-                const episode = episodeSelect.value || 1;
-                if (server === 'vidlink') videoPlayer.src = `https://vidlink.pro/tv/${currentItem.id}/${season}/${episode}`;
-                else if (server === 'vidsrc') videoPlayer.src = `https://vidsrc.cc/v2/embed/tv/${currentItem.id}/${season}/${episode}`;
-                else if (server === 'vidbinge') videoPlayer.src = `https://vidbinge.dev/embed/tv/${currentItem.id}/${season}/${episode}`;
-                else if (server === 'embedsu') videoPlayer.src = `https://embed.su/embed/tv/${currentItem.id}/${season}/${episode}`;
+                switch(server) {
+                    case 'vidlink': videoPlayer.src = `https://vidlink.pro/tv/${id}/${season}/${episode}`; break;
+                    case 'vidsrc_me': videoPlayer.src = `https://vidsrc.me/embed/tv?tmdb=${id}&season=${season}&episode=${episode}`; break;
+                    case 'vidsrc_cc': videoPlayer.src = `https://vidsrc.cc/v2/embed/tv/${id}/${season}/${episode}`; break;
+                    case 'vidsrc_pro': videoPlayer.src = `https://vidsrc.pro/embed/tv/${id}/${season}/${episode}`; break;
+                    case 'autoembed': videoPlayer.src = `https://player.autoembed.cc/embed/tv/${id}/${season}/${episode}`; break;
+                    case 'embedsu': videoPlayer.src = `https://embed.su/embed/tv/${id}/${season}/${episode}`; break;
+                    case 'smashystream': videoPlayer.src = `https://player.smashy.stream/tv/${id}?s=${season}&e=${episode}`; break;
+                    case 'twoembed': videoPlayer.src = `https://www.2embed.cc/embedtv/${id}&s=${season}&e=${episode}`; break;
+                    case 'vidbinge': videoPlayer.src = `https://vidbinge.dev/embed/tv/${id}/${season}/${episode}`; break;
+                    case 'multiembed': videoPlayer.src = `https://multiembed.mov/?video_id=${id}&tmdb=1&s=${season}&e=${episode}`; break;
+                    default: videoPlayer.src = `https://vidlink.pro/tv/${id}/${season}/${episode}`;
+                }
             }
         }
 
