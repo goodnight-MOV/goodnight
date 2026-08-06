@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GoodNight 🌙 | عالم الأفلام والسهرات</title>
+    <title>GoodNight 🌙 | سهرة الليلة</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -28,7 +28,6 @@
             line-height: 1.6;
         }
 
-        /* Header */
         header {
             background: rgba(11, 12, 16, 0.95);
             position: sticky;
@@ -49,9 +48,6 @@
             font-weight: 900;
             color: var(--accent-color);
             text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
         }
 
         .search-box {
@@ -75,33 +71,16 @@
             font-size: 0.95rem;
         }
 
-        /* Hero Banner */
         .hero {
             position: relative;
-            height: 50vh;
-            background: linear-gradient(to top, var(--bg-color), transparent), url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=1200') center/cover;
+            height: 35vh;
+            background: linear-gradient(to top, var(--bg-color), transparent), url('https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?q=80&w=1200') center/cover;
             display: flex;
             align-items: flex-end;
-            padding: 3rem 2rem;
+            padding: 2rem;
             margin-bottom: 2rem;
         }
 
-        .hero-content {
-            max-width: 600px;
-        }
-
-        .hero-title {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            color: #fff;
-        }
-
-        .hero-desc {
-            color: var(--text-muted);
-            margin-bottom: 1rem;
-        }
-
-        /* Movie Grid */
         .container {
             padding: 0 2rem 3rem 2rem;
         }
@@ -144,6 +123,7 @@
 
         .movie-title {
             font-size: 1rem;
+            font-weight: bold;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -158,105 +138,191 @@
             margin-top: 0.4rem;
         }
 
-        /* Footer */
+        /* Modal Player */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 900px;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            font-size: 2rem;
+            color: #fff;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .player-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            background: #000;
+        }
+
+        .player-container iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            border: none;
+        }
+
+        .modal-details {
+            padding: 1.5rem;
+        }
+
         footer {
             text-align: center;
             padding: 2rem;
             background: #060709;
             color: var(--text-muted);
             border-top: 1px solid rgba(255, 255, 255, 0.05);
-            font-size: 0.9rem;
-        }
-
-        @media (max-width: 600px) {
-            .hero { height: 40vh; padding: 1.5rem 1rem; }
-            .hero-title { font-size: 1.8rem; }
-            .container { padding: 0 1rem 2rem 1rem; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <a href="#" class="logo">
-            <span>GoodNight</span> 🌙
-        </a>
+        <a href="#" class="logo">GoodNight 🌙</a>
         <div class="search-box">
-            <input type="text" id="searchInput" placeholder="ابحث عن فيلمك المفضل للسهرة...">
+            <input type="text" id="searchInput" placeholder="ابحث عن أي فيلم...">
         </div>
     </header>
 
     <section class="hero">
-        <div class="hero-content">
-            <h1 class="hero-title">سهرة الليلة على GoodNight</h1>
-            <p class="hero-desc">استكشف أحدث الأفلام العالمية والتقييمات، واختر فيلمك المفضل لسهرة ممتعة.</p>
+        <div>
+            <h1 style="font-size: 2.2rem;">سهرة الليلة على GoodNight</h1>
+            <p style="color: var(--text-muted);">استكشف أحدث الأفلام العالمية، واختر فيلمك المفضّل لسهرة ممتعة.</p>
         </div>
     </section>
 
     <div class="container">
-        <h2 class="section-title">الأفلام الأكثر شعبية 🔥</h2>
+        <h2 class="section-title" id="gridTitle">الأفلام الأكثر شعبية 🔥</h2>
         <div class="movies-grid" id="moviesGrid"></div>
     </div>
 
+    <!-- Modal Player Window -->
+    <div class="modal" id="movieModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <div class="player-container">
+                <iframe id="videoPlayer" src="" allowfullscreen></iframe>
+            </div>
+            <div class="modal-details">
+                <h2 id="modalTitle" style="color: var(--accent-color);"></h2>
+                <p id="modalOverview" style="margin-top: 0.5rem; color: var(--text-muted);"></p>
+            </div>
+        </div>
+    </div>
+
     <footer>
-        <p>&copy; 2026 GoodNight Movies | تم التطوير للعرض على GitHub Pages 🚀</p>
+        <p>&copy; 2026 GoodNight Movies</p>
     </footer>
 
     <script>
-        const demoMovies = [
-            { title: "Oppenheimer", rating: 8.9, poster: "https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv3B21S3R.jpg" },
-            { title: "Interstellar", rating: 8.7, poster: "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg" },
-            { title: "The Dark Knight", rating: 9.0, poster: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg" },
-            { title: "Inception", rating: 8.8, poster: "https://image.tmdb.org/t/p/w500/oYuLE291o911B3iB19y291.jpg" },
-            { title: "Dune: Part Two", rating: 8.5, poster: "https://image.tmdb.org/t/p/w500/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg" },
-            { title: "Spider-Man: Across the Spider-Verse", rating: 8.7, poster: "https://image.tmdb.org/t/p/w500/8Vt6mC92FTS321.jpg" }
-        ];
+        const API_KEY = 'aba2e861e0b78ab29d243dd20a9fa948'; 
+        const BASE_URL = 'https://api.themoviedb.org/3';
+        const IMG_URL = 'https://image.tmdb.org/t/p/w500';
 
-const API_KEY = 'aba2e861e0b78ab29d243dd20a9fa948';
         const moviesGrid = document.getElementById('moviesGrid');
         const searchInput = document.getElementById('searchInput');
+        const movieModal = document.getElementById('movieModal');
+        const videoPlayer = document.getElementById('videoPlayer');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalOverview = document.getElementById('modalOverview');
+        const gridTitle = document.getElementById('gridTitle');
 
-        function renderMovies(movies) {
+        async function fetchTrendingMovies() {
+            try {
+                const res = await fetch(`${BASE_URL}/trending/movie/week?api_key=${API_KEY}&language=ar-SA`);
+                const data = await res.json();
+                displayMovies(data.results);
+            } catch (err) {
+                console.error('Error fetching movies:', err);
+            }
+        }
+
+        async function searchMovies(query) {
+            if (!query) {
+                gridTitle.innerText = "الأفلام الأكثر شعبية 🔥";
+                fetchTrendingMovies();
+                return;
+            }
+            gridTitle.innerText = `نتائج البحث عن: ${query}`;
+            try {
+                const res = await fetch(`${BASE_URL}/search/movie?api_key=${API_KEY}&language=ar-SA&query=${encodeURIComponent(query)}`);
+                const data = await res.json();
+                displayMovies(data.results);
+            } catch (err) {
+                console.error('Error searching movies:', err);
+            }
+        }
+
+        function displayMovies(movies) {
             moviesGrid.innerHTML = '';
             movies.forEach(movie => {
+                if (!movie.poster_path) return;
                 const card = document.createElement('div');
                 card.className = 'movie-card';
                 card.innerHTML = `
-                    <img class="movie-poster" src="${movie.poster || movie.poster_path}" alt="${movie.title}">
+                    <img class="movie-poster" src="${IMG_URL + movie.poster_path}" alt="${movie.title}">
                     <div class="movie-info">
                         <div class="movie-title">${movie.title}</div>
-                        <div class="movie-rating">★ ${movie.rating || movie.vote_average || 'N/A'}</div>
+                        <div class="movie-rating">★ ${movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A'}</div>
                     </div>
                 `;
+                card.onclick = () => openPlayer(movie);
                 moviesGrid.appendChild(card);
             });
         }
 
-        searchInput.addEventListener('input', (e) => {
-            const query = e.target.value.toLowerCase();
-            const filtered = demoMovies.filter(m => m.title.toLowerCase().includes(query));
-            renderMovies(filtered);
-        });
+        function openPlayer(movie) {
+            modalTitle.innerText = movie.title;
+            modalOverview.innerText = movie.overview || "لا يوجد وصف متاح لهذا الفيلم حالياً.";
+            
+            // رابط المشغل المباشر
+            videoPlayer.src = `https://vidsrc.to/embed/movie/${movie.id}`;
+            movieModal.style.display = 'flex';
+        }
 
-        async function fetchMovies() {
-            if (API_KEY) {
-                try {
-                    const res = await fetch(`https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}&language=ar`);
-                    const data = await res.json();
-                    renderMovies(data.results.map(m => ({
-                        title: m.title,
-                        rating: m.vote_average.toFixed(1),
-                        poster: `https://image.tmdb.org/t/p/w500${m.poster_path}`
-                    })));
-                } catch (err) {
-                    renderMovies(demoMovies);
-                }
-            } else {
-                renderMovies(demoMovies);
+        function closeModal() {
+            movieModal.style.display = 'none';
+            videoPlayer.src = '';
+        }
+
+        // إغلاق الشاشة المنبثقة عند الضغط خارجها
+        window.onclick = function(event) {
+            if (event.target === movieModal) {
+                closeModal();
             }
         }
 
-        fetchMovies();
+        let timer;
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                searchMovies(e.target.value.trim());
+            }, 500);
+        });
+
+        fetchTrendingMovies();
     </script>
 </body>
 </html>
