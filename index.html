@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GoodNight 🌙 | سهرة الليلة</title>
+    <title>GoodNight 🌙 | أفلام ومسلسلات</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -50,6 +50,27 @@
             text-decoration: none;
         }
 
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .tab-btn {
+            background: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1.2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active, .tab-btn:hover {
+            background: var(--accent-color);
+            color: #000;
+        }
+
         .search-box {
             display: flex;
             align-items: center;
@@ -58,7 +79,7 @@
             padding: 0.4rem 1rem;
             border: 1px solid rgba(255, 255, 255, 0.1);
             width: 100%;
-            max-width: 400px;
+            max-width: 320px;
         }
 
         .search-box input {
@@ -73,7 +94,7 @@
 
         .hero {
             position: relative;
-            height: 35vh;
+            height: 30vh;
             background: linear-gradient(to top, var(--bg-color), transparent), url('https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?q=80&w=1200') center/cover;
             display: flex;
             align-items: flex-end;
@@ -170,21 +191,23 @@
             z-index: 10;
         }
 
-        .server-bar {
+        .controls-bar {
             padding: 0.8rem 1.5rem;
             background: #151c24;
             display: flex;
             align-items: center;
+            flex-wrap: wrap;
             gap: 10px;
         }
 
-        .server-bar select {
+        .controls-bar select {
             background: var(--card-bg);
             color: #fff;
             border: 1px solid var(--accent-color);
             padding: 0.4rem 0.8rem;
             border-radius: 6px;
             outline: none;
+            cursor: pointer;
         }
 
         .player-container {
@@ -218,15 +241,19 @@
 
     <header>
         <a href="#" class="logo">GoodNight 🌙</a>
+        <div class="nav-tabs">
+            <button class="tab-btn active" id="moviesTab" onclick="switchType('movie')">🎬 أفلام</button>
+            <button class="tab-btn" id="tvTab" onclick="switchType('tv')">📺 مسلسلات</button>
+        </div>
         <div class="search-box">
-            <input type="text" id="searchInput" placeholder="ابحث عن أي فيلم...">
+            <input type="text" id="searchInput" placeholder="ابحث عن فيلم أو مسلسل...">
         </div>
     </header>
 
     <section class="hero">
         <div>
-            <h1 style="font-size: 2.2rem;">سهرة الليلة على GoodNight</h1>
-            <p style="color: var(--text-muted);">استكشف أحدث الأفلام العالمية، واختر فيلمك المفضّل لسهرة ممتعة.</p>
+            <h1 style="font-size: 2.2rem;" id="heroTitle">سهرة الليلة على GoodNight</h1>
+            <p style="color: var(--text-muted);" id="heroSub">استكشف أحدث الأفلام والمسلسلات العالمية المترجمة.</p>
         </div>
     </section>
 
@@ -239,17 +266,32 @@
     <div class="modal" id="movieModal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
-            <div class="server-bar">
-                <label for="serverSelect" style="font-size: 0.9rem; color: var(--text-muted);">اختر سيرفر المشاهدة:</label>
-                <select id="serverSelect" onchange="changeServer()">
-                    <option value="vidlink">سيرفر 1 (VidLink)</option>
-                    <option value="embedsu">سيرفر 2 (Embed.su)</option>
-                    <option value="autoembed">سيرفر 3 (AutoEmbed)</option>
-                </select>
+            <div class="controls-bar">
+                <div>
+                    <label style="font-size: 0.85rem; color: var(--text-muted);">السيرفر:</label>
+                    <select id="serverSelect" onchange="updatePlayerSrc()">
+                        <option value="vidlink">سيرفر 1 (VidLink)</option>
+                        <option value="embedsu">سيرفر 2 (Embed.su)</option>
+                        <option value="autoembed">سيرفر 3 (AutoEmbed)</option>
+                    </select>
+                </div>
+
+                <div id="tvControls" style="display: none; gap: 10px;">
+                    <div>
+                        <label style="font-size: 0.85rem; color: var(--text-muted);">الموسم:</label>
+                        <select id="seasonSelect" onchange="onSeasonChange()"></select>
+                    </div>
+                    <div>
+                        <label style="font-size: 0.85rem; color: var(--text-muted);">الحلقة:</label>
+                        <select id="episodeSelect" onchange="updatePlayerSrc()"></select>
+                    </div>
+                </div>
             </div>
+
             <div class="player-container">
                 <iframe id="videoPlayer" src="" allowfullscreen></iframe>
             </div>
+
             <div class="modal-details">
                 <h2 id="modalTitle" style="color: var(--accent-color);"></h2>
                 <p id="modalOverview" style="margin-top: 0.5rem; color: var(--text-muted);"></p>
@@ -258,7 +300,7 @@
     </div>
 
     <footer>
-        <p>&copy; 2026 GoodNight Movies</p>
+        <p>&copy; 2026 GoodNight Movies & TV</p>
     </footer>
 
     <script>
@@ -266,7 +308,8 @@
         const BASE_URL = 'https://api.themoviedb.org/3';
         const IMG_URL = 'https://image.tmdb.org/t/p/w500';
 
-        let currentMovieId = null;
+        let currentType = 'movie'; // 'movie' or 'tv'
+        let currentItem = null;
 
         const moviesGrid = document.getElementById('moviesGrid');
         const searchInput = document.getElementById('searchInput');
@@ -276,74 +319,162 @@
         const modalOverview = document.getElementById('modalOverview');
         const gridTitle = document.getElementById('gridTitle');
         const serverSelect = document.getElementById('serverSelect');
+        const seasonSelect = document.getElementById('seasonSelect');
+        const episodeSelect = document.getElementById('episodeSelect');
+        const tvControls = document.getElementById('tvControls');
+        const moviesTab = document.getElementById('moviesTab');
+        const tvTab = document.getElementById('tvTab');
 
-        async function fetchTrendingMovies() {
+        function switchType(type) {
+            currentType = type;
+            searchInput.value = '';
+            if (type === 'movie') {
+                moviesTab.classList.add('active');
+                tvTab.classList.remove('active');
+                gridTitle.innerText = "الأفلام الأكثر شعبية 🔥";
+            } else {
+                tvTab.classList.add('active');
+                moviesTab.classList.remove('active');
+                gridTitle.innerText = "المسلسلات الأكثر شعبية 🔥";
+            }
+            fetchTrending();
+        }
+
+        async function fetchTrending() {
             try {
-                const res = await fetch(`${BASE_URL}/trending/movie/week?api_key=${API_KEY}&language=ar-SA&include_adult=false`);
+                const res = await fetch(`${BASE_URL}/trending/${currentType}/week?api_key=${API_KEY}&language=ar-SA&include_adult=false`);
                 const data = await res.json();
-                displayMovies(data.results);
+                displayItems(data.results);
             } catch (err) {
-                console.error('Error fetching movies:', err);
+                console.error('Error fetching data:', err);
             }
         }
 
-        async function searchMovies(query) {
+        async function searchItems(query) {
             if (!query) {
-                gridTitle.innerText = "الأفلام الأكثر شعبية 🔥";
-                fetchTrendingMovies();
+                switchType(currentType);
                 return;
             }
             gridTitle.innerText = `نتائج البحث عن: ${query}`;
             try {
-                const res = await fetch(`${BASE_URL}/search/movie?api_key=${API_KEY}&language=ar-SA&query=${encodeURIComponent(query)}&include_adult=false`);
+                const res = await fetch(`${BASE_URL}/search/${currentType}?api_key=${API_KEY}&language=ar-SA&query=${encodeURIComponent(query)}&include_adult=false`);
                 const data = await res.json();
-                displayMovies(data.results);
+                displayItems(data.results);
             } catch (err) {
-                console.error('Error searching movies:', err);
+                console.error('Error searching:', err);
             }
         }
 
-        function displayMovies(movies) {
+        function displayItems(items) {
             moviesGrid.innerHTML = '';
-            movies.forEach(movie => {
-                if (!movie.poster_path) return;
+            items.forEach(item => {
+                if (!item.poster_path) return;
+                const title = item.title || item.name;
                 const card = document.createElement('div');
                 card.className = 'movie-card';
                 card.innerHTML = `
-                    <img class="movie-poster" src="${IMG_URL + movie.poster_path}" alt="${movie.title}">
+                    <img class="movie-poster" src="${IMG_URL + item.poster_path}" alt="${title}">
                     <div class="movie-info">
-                        <div class="movie-title">${movie.title}</div>
-                        <div class="movie-rating">★ ${movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A'}</div>
+                        <div class="movie-title">${title}</div>
+                        <div class="movie-rating">★ ${item.vote_average ? item.vote_average.toFixed(1) : 'N/A'}</div>
                     </div>
                 `;
-                card.onclick = () => openPlayer(movie);
+                card.onclick = () => openPlayer(item);
                 moviesGrid.appendChild(card);
             });
         }
 
-        function openPlayer(movie) {
-            currentMovieId = movie.id;
-            modalTitle.innerText = movie.title;
-            modalOverview.innerText = movie.overview || "لا يوجد وصف متاح لهذا الفيلم حالياً.";
-            
+        async function openPlayer(item) {
+            currentItem = item;
+            modalTitle.innerText = item.title || item.name;
+            modalOverview.innerText = item.overview || "لا يوجد وصف متاح حالياً.";
             serverSelect.value = "vidlink";
-            loadVideoSrc(currentMovieId, "vidlink");
+
+            if (currentType === 'tv') {
+                tvControls.style.display = 'flex';
+                await loadSeasons(item.id);
+            } else {
+                tvControls.style.display = 'none';
+                updatePlayerSrc();
+            }
             movieModal.style.display = 'flex';
         }
 
-        function loadVideoSrc(movieId, server) {
-            if (server === 'vidlink') {
-                videoPlayer.src = `https://vidlink.pro/movie/${movieId}`;
-            } else if (server === 'embedsu') {
-                videoPlayer.src = `https://embed.su/embed/movie/${movieId}`;
-            } else if (server === 'autoembed') {
-                videoPlayer.src = `https://player.autoembed.cc/embed/movie/${movieId}`;
+        async function loadSeasons(tvId) {
+            try {
+                const res = await fetch(`${BASE_URL}/tv/${tvId}?api_key=${API_KEY}&language=ar-SA`);
+                const data = await res.json();
+                seasonSelect.innerHTML = '';
+                const seasons = data.seasons ? data.seasons.filter(s => s.season_number > 0) : [];
+                if (seasons.length === 0) {
+                    seasonSelect.innerHTML = '<option value="1">الموسم 1</option>';
+                } else {
+                    seasons.forEach(s => {
+                        const opt = document.createElement('option');
+                        opt.value = s.season_number;
+                        opt.innerText = s.name || `الموسم ${s.season_number}`;
+                        seasonSelect.appendChild(opt);
+                    });
+                }
+                await loadEpisodes(tvId, seasonSelect.value);
+            } catch (e) {
+                seasonSelect.innerHTML = '<option value="1">الموسم 1</option>';
+                await loadEpisodes(tvId, 1);
             }
         }
 
-        function changeServer() {
-            if (currentMovieId) {
-                loadVideoSrc(currentMovieId, serverSelect.value);
+        async function onSeasonChange() {
+            if (currentItem && currentType === 'tv') {
+                await loadEpisodes(currentItem.id, seasonSelect.value);
+            }
+        }
+
+        async function loadEpisodes(tvId, seasonNum) {
+            try {
+                const res = await fetch(`${BASE_URL}/tv/${tvId}/season/${seasonNum}?api_key=${API_KEY}&language=ar-SA`);
+                const data = await res.json();
+                episodeSelect.innerHTML = '';
+                const episodes = data.episodes || [];
+                if (episodes.length === 0) {
+                    for (let i = 1; i <= 20; i++) {
+                        const opt = document.createElement('option');
+                        opt.value = i;
+                        opt.innerText = `الحلقة ${i}`;
+                        episodeSelect.appendChild(opt);
+                    }
+                } else {
+                    episodes.forEach(e => {
+                        const opt = document.createElement('option');
+                        opt.value = e.episode_number;
+                        opt.innerText = `الحلقة ${e.episode_number}: ${e.name || ''}`;
+                        episodeSelect.appendChild(opt);
+                    });
+                }
+            } catch (e) {
+                episodeSelect.innerHTML = '';
+                for (let i = 1; i <= 20; i++) {
+                    const opt = document.createElement('option');
+                    opt.value = i;
+                    opt.innerText = `الحلقة ${i}`;
+                    episodeSelect.appendChild(opt);
+                }
+            }
+            updatePlayerSrc();
+        }
+
+        function updatePlayerSrc() {
+            if (!currentItem) return;
+            const server = serverSelect.value;
+            if (currentType === 'movie') {
+                if (server === 'vidlink') videoPlayer.src = `https://vidlink.pro/movie/${currentItem.id}`;
+                else if (server === 'embedsu') videoPlayer.src = `https://embed.su/embed/movie/${currentItem.id}`;
+                else if (server === 'autoembed') videoPlayer.src = `https://player.autoembed.cc/embed/movie/${currentItem.id}`;
+            } else {
+                const season = seasonSelect.value || 1;
+                const episode = episodeSelect.value || 1;
+                if (server === 'vidlink') videoPlayer.src = `https://vidlink.pro/tv/${currentItem.id}/${season}/${episode}`;
+                else if (server === 'embedsu') videoPlayer.src = `https://embed.su/embed/tv/${currentItem.id}/${season}/${episode}`;
+                else if (server === 'autoembed') videoPlayer.src = `https://player.autoembed.cc/embed/tv/${currentItem.id}/${season}/${episode}`;
             }
         }
 
@@ -362,11 +493,11 @@
         searchInput.addEventListener('input', (e) => {
             clearTimeout(timer);
             timer = setTimeout(() => {
-                searchMovies(e.target.value.trim());
+                searchItems(e.target.value.trim());
             }, 500);
         });
 
-        fetchTrendingMovies();
+        fetchTrending();
     </script>
 </body>
 </html>
