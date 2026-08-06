@@ -242,14 +242,13 @@
             <div class="server-bar">
                 <label for="serverSelect" style="font-size: 0.9rem; color: var(--text-muted);">اختر سيرفر المشاهدة:</label>
                 <select id="serverSelect" onchange="changeServer()">
-                    <option value="vidlink">سيرفر 1 (آمن وبدون إعلانات)</option>
-                    <option value="embedsu">سيرفر 2 (سريع)</option>
-                    <option value="autoembed">سيرفر 3 (بديل)</option>
+                    <option value="vidlink">سيرفر 1 (VidLink)</option>
+                    <option value="embedsu">سيرفر 2 (Embed.su)</option>
+                    <option value="autoembed">سيرفر 3 (AutoEmbed)</option>
                 </select>
             </div>
             <div class="player-container">
-                <!-- إضافة الحماية لمنع أي نوافذ منبثقة sandbox -->
-                <iframe id="videoPlayer" src="" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"></iframe>
+                <iframe id="videoPlayer" src="" allowfullscreen></iframe>
             </div>
             <div class="modal-details">
                 <h2 id="modalTitle" style="color: var(--accent-color);"></h2>
