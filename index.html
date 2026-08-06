@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GoodNight 🌙 | مشاهدة أفلام ومسلسلات</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- PWA & Mobile App Support -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="GoodNight">
+    <meta name="theme-color" content="#c81919">
+
     <style>
         :root {
             --bg-main: #0e1117;
@@ -32,7 +41,7 @@
             overflow-x: hidden;
         }
 
-        /* 1. Top Red Bar */
+        /* Top Red Bar */
         .top-nav {
             background-color: var(--red-primary);
             padding: 0.6rem 2rem;
@@ -133,7 +142,7 @@
             font-size: 0.85rem;
         }
 
-        /* Slide Drawer Menu (القائمة الجانبية) */
+        /* Side Drawer Menu */
         .drawer-overlay {
             position: fixed;
             top: 0; left: 0;
@@ -241,7 +250,7 @@
             border-radius: 4px;
         }
 
-        /* 2. Main Brand & Search Area */
+        /* Main Brand & Search Area */
         .brand-header {
             background-color: #121620;
             padding: 1.8rem 1rem;
@@ -308,7 +317,7 @@
             padding: 1.5rem 1rem;
         }
 
-        /* 3. Featured Slider Section */
+        /* Featured Slider Section */
         .slider-section {
             position: relative;
             margin-bottom: 2rem;
@@ -404,7 +413,7 @@
         .arrow-left { left: 10px; }
         .arrow-right { right: 10px; }
 
-        /* 4. Quick Action Buttons Grid */
+        /* Quick Action Buttons Grid */
         .quick-buttons {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -437,7 +446,7 @@
             background: var(--red-primary);
         }
 
-        /* 5. Filter Dropdowns Card */
+        /* Filter Dropdowns Card */
         .filter-box {
             background: var(--bg-card);
             border-radius: 14px;
@@ -469,7 +478,7 @@
             border-color: var(--red-primary);
         }
 
-        /* 6. Content Section & Grid */
+        /* Content Section & Grid */
         .section-header-title {
             font-size: 1.4rem;
             font-weight: 900;
@@ -563,7 +572,7 @@
             box-shadow: 0 0 15px rgba(200, 25, 25, 0.4);
         }
 
-        /* 7. Modal Player & Legal Windows */
+        /* Modal Player & Legal Windows */
         .modal {
             display: none;
             position: fixed;
@@ -737,27 +746,6 @@
             margin-bottom: 1rem;
         }
 
-        .legal-form input, .legal-form textarea {
-            width: 100%;
-            background: #0d1017;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: #fff;
-            padding: 0.8rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            outline: none;
-        }
-
-        .legal-form button {
-            background: var(--red-primary);
-            color: #fff;
-            border: none;
-            padding: 0.7rem 2rem;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
         /* Cookie & Age Consent Banner */
         .cookie-banner {
             position: fixed;
@@ -831,7 +819,7 @@
         </div>
     </div>
 
-    <!-- Side Drawer Menu (القائمة الجانبية) -->
+    <!-- Side Drawer Menu -->
     <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
     <div class="drawer" id="sideDrawer">
         <div class="drawer-header">
@@ -1068,7 +1056,6 @@
         const sideDrawer = document.getElementById('sideDrawer');
         const drawerOverlay = document.getElementById('drawerOverlay');
 
-        // Check Cookies Acceptance
         if (localStorage.getItem('cookiesAccepted')) {
             cookieBanner.style.display = 'none';
         }
@@ -1078,7 +1065,6 @@
             cookieBanner.style.display = 'none';
         }
 
-        // Legal Modals Handler
         function openLegalModal(type) {
             let html = '';
             if (type === 'dmca') {
