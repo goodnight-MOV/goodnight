@@ -563,7 +563,7 @@
             box-shadow: 0 0 15px rgba(200, 25, 25, 0.4);
         }
 
-        /* 7. Modal Player Window */
+        /* 7. Modal Player & Legal Windows */
         .modal {
             display: none;
             position: fixed;
@@ -688,19 +688,117 @@
             margin-left: 6px;
         }
 
+        /* Footer & Legal Links */
         footer {
-            text-align: center;
-            padding: 2rem;
             background: #080a0e;
             color: var(--text-muted);
             border-top: 1px solid rgba(255, 255, 255, 0.05);
             margin-top: 3rem;
+            padding: 2.5rem 1rem;
+            text-align: center;
+        }
+
+        .footer-legal-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            list-style: none;
+            margin-bottom: 1.2rem;
+        }
+
+        .footer-legal-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .footer-legal-links a:hover {
+            color: var(--red-primary);
+        }
+
+        .legal-body {
+            padding: 2rem;
+            line-height: 1.8;
+            font-size: 0.95rem;
+            color: #cbd5e1;
+        }
+
+        .legal-body h3 {
+            color: var(--red-primary);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .legal-body p {
+            margin-bottom: 1rem;
+        }
+
+        .legal-form input, .legal-form textarea {
+            width: 100%;
+            background: #0d1017;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #fff;
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            outline: none;
+        }
+
+        .legal-form button {
+            background: var(--red-primary);
+            color: #fff;
+            border: none;
+            padding: 0.7rem 2rem;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Cookie & Age Consent Banner */
+        .cookie-banner {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: #121620;
+            border-top: 2px solid var(--red-primary);
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            z-index: 4000;
+            box-shadow: 0 -5px 25px rgba(0,0,0,0.8);
+        }
+
+        .cookie-text {
+            font-size: 0.88rem;
+            color: #cbd5e1;
+            max-width: 850px;
+        }
+
+        .cookie-btn {
+            background: var(--red-primary);
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap;
         }
 
         @media (max-width: 650px) {
             #tvControls {
                 flex-wrap: wrap;
                 justify-content: center;
+            }
+            .cookie-banner {
+                flex-direction: column;
+                text-align: center;
             }
         }
     </style>
@@ -907,8 +1005,31 @@
         </div>
     </div>
 
+    <!-- 8. Legal Modal Window -->
+    <div class="modal" id="legalModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeLegalModal()">&times;</span>
+            <div class="legal-body" id="legalModalContent"></div>
+        </div>
+    </div>
+
+    <!-- Cookie & Age Consent Banner -->
+    <div class="cookie-banner" id="cookieBanner">
+        <div class="cookie-text">
+            📌 نستخدم ملفات تعريف الارتباط (Cookies) لتحسين تجربة التصفح وتوفير الإعلانات المناسبة. بدخولك للموقع، فإنك تؤكد أن عمرك 18 سنة أو أكثر وتوافق على <a onclick="openLegalModal('privacy')" style="color:var(--gold); cursor:pointer; text-decoration:underline;">سياسة الخصوصية</a>.
+        </div>
+        <button class="cookie-btn" onclick="acceptCookies()">موافق والمتابعة ✓</button>
+    </div>
+
+    <!-- Footer -->
     <footer>
-        <p>&copy; 2026 GoodNight Movies & TV</p>
+        <ul class="footer-legal-links">
+            <li><a onclick="openLegalModal('dmca')">حقوق الملكية (DMCA)</a></li>
+            <li><a onclick="openLegalModal('privacy')">سياسة الخصوصية</a></li>
+            <li><a onclick="openLegalModal('terms')">شروط الاستخدام</a></li>
+            <li><a onclick="openLegalModal('contact')">اتصل بنا / تقديم بلاغ</a></li>
+        </ul>
+        <p>&copy; 2026 GoodNight Movies & TV - جميع الحقوق محفوظة</p>
     </footer>
 
     <script>
@@ -927,6 +1048,9 @@
         const sliderContainer = document.getElementById('sliderContainer');
         const searchInput = document.getElementById('searchInput');
         const movieModal = document.getElementById('movieModal');
+        const legalModal = document.getElementById('legalModal');
+        const legalModalContent = document.getElementById('legalModalContent');
+        const cookieBanner = document.getElementById('cookieBanner');
         const videoPlayer = document.getElementById('videoPlayer');
         const modalTitle = document.getElementById('modalTitle');
         const modalOverview = document.getElementById('modalOverview');
@@ -943,6 +1067,59 @@
         const loadMoreBtn = document.getElementById('loadMoreBtn');
         const sideDrawer = document.getElementById('sideDrawer');
         const drawerOverlay = document.getElementById('drawerOverlay');
+
+        // Check Cookies Acceptance
+        if (localStorage.getItem('cookiesAccepted')) {
+            cookieBanner.style.display = 'none';
+        }
+
+        function acceptCookies() {
+            localStorage.setItem('cookiesAccepted', 'true');
+            cookieBanner.style.display = 'none';
+        }
+
+        // Legal Modals Handler
+        function openLegalModal(type) {
+            let html = '';
+            if (type === 'dmca') {
+                html = `
+                    <h3>إخلاء المسؤولية وحقوق الملكية (DMCA Policy)</h3>
+                    <p>موقع <strong>GoodNight</strong> هو عبارة عن محرك بحث مجمّع للروابط الجماهيرية (Index & Aggregator). الموقع لا يقوم باستضافة، أو تحميل، أو تخزين، أو رفـع أي ملفات فيديو أو أفلام على سيرفراته الخاصة إطلاقاً.</p>
+                    <p>جميع مواد الفيديو المعروضة يتم تضمينها عبر خوادم ومُشغلات طرف ثالث خارجية (Third-Party Embed Players) مشهورة ومتاحة للعامة عبر شبكة الإنترنت.</p>
+                    <p>في حال كنت مالكاً لفيلم أو مسلسل أو تمثل جهة قانونية وترغب في إزالة أي رابط يخصك، يرجى مراسلتنا فوراً عبر البريد المخصص للحذف: <strong>goodnight.contact@proton.me</strong> وسيتم التعامل مع الطلب وحذف التضمين خلال 24-48 ساعة عمل.</p>
+                `;
+            } else if (type === 'privacy') {
+                html = `
+                    <h3>سياسة الخصوصية (Privacy Policy)</h3>
+                    <p>أهلاً بك في موقع GoodNight. نحن نحترم خصوصية جميع الزوار:</p>
+                    <p>1. <strong>ملفات تعريف الارتباط (Cookies):</strong> نستخدم الكوكيز لتحسين تجربة التصفح وحفظ خياراتك وحالة المشاهدة.</p>
+                    <p>2. <strong>شبكات الإعلانات:</strong> قد يستخدم الموقع شبكات إعلانية مستقلة (مثل Adsterra) تعرض إعلانات مخصصة تعتمد على بيانات تصفح غير شخصية.</p>
+                    <p>3. <strong>البيانات الشخصية:</strong> لا نطلب من الزائر إنشاء حساب أو تزويدنا بأي بيانات شخصية سرية لاستخدام خدماتنا.</p>
+                `;
+            } else if (type === 'terms') {
+                html = `
+                    <h3>شروط الاستخدام (Terms of Service)</h3>
+                    <p>1. الخدمات المتاحة على موقع GoodNight تقدم "كما هي" دون ضمانات مطلقة على استمرارية أو سرعة السيرفرات الخارجية.</p>
+                    <p>2. الاستخدام مخصص للأغراض الشخصية والتسليّة فقط.</p>
+                    <p>3. الموقع غير مسؤول عن أي محتوى أو إعلانات يتم تقديمها من المشغلات الخارجية المقترنة.</p>
+                `;
+            } else if (type === 'contact') {
+                html = `
+                    <h3>اتصل بنا / تقديم بلاغ حقوق نشر (DMCA Contact)</h3>
+                    <p>إذا كان لديك أي استفسار، أو اقتراح، أو طلب إزالة محتوى ينتهك حقوق الملكية الفكرية، يسعدنا التواصل المباشر معنا عبر البريد الإلكتروني المخصص:</p>
+                    <p style="text-align: center; background: #0d1017; padding: 1rem; border-radius: 8px; font-weight: bold; color: var(--gold);">
+                        📧 goodnight.contact@proton.me
+                    </p>
+                    <p>نعدكم بمعالجة الطلبات وإزالة أي روابط محل النزاع فور التواصل والتأكد من ملكية المستندات.</p>
+                `;
+            }
+            legalModalContent.innerHTML = html;
+            legalModal.style.display = 'flex';
+        }
+
+        function closeLegalModal() {
+            legalModal.style.display = 'none';
+        }
 
         function toggleDrawer() {
             sideDrawer.classList.toggle('active');
@@ -1133,7 +1310,6 @@
                 card.onclick = () => openPlayer(item);
                 moviesGrid.appendChild(card);
 
-                // جلب رقم الحلقة تلقائياً للمسلسلات
                 if (currentType === 'tv') {
                     fetchTvBadgeInfo(item.id, badgeId);
                 }
@@ -1352,9 +1528,8 @@
         }
 
         window.onclick = function(event) {
-            if (event.target === movieModal) {
-                closeModal();
-            }
+            if (event.target === movieModal) closeModal();
+            if (event.target === legalModal) closeLegalModal();
         }
 
         searchInput.addEventListener('keypress', (e) => {
