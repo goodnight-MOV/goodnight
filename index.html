@@ -9,10 +9,12 @@
         :root {
             --bg-color: #0b0d12;
             --card-bg: #151924;
+            --drawer-bg: #11141e;
             --input-bg: #0d1017;
-            --accent-color: #66fcf1;
+            --accent-color: #e50914; /* أحمر سينمائي مميز */
+            --highlight-color: #66fcf1;
             --text-color: #ffffff;
-            --text-muted: #9ba1b0;
+            --text-muted: #a0a6b5;
             --gold: #f5c518;
         }
 
@@ -27,8 +29,10 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
+        /* Header Bar */
         header {
             background: rgba(11, 13, 18, 0.95);
             position: sticky;
@@ -36,18 +40,39 @@
             z-index: 1000;
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 1rem 2rem;
+            padding: 0.8rem 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
             gap: 1rem;
         }
 
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .menu-btn {
+            background: var(--card-bg);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            font-size: 1.4rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .menu-btn:hover {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+
         .logo {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: 900;
-            color: var(--accent-color);
+            color: var(--highlight-color);
             text-decoration: none;
             cursor: pointer;
         }
@@ -55,23 +80,25 @@
         .nav-tabs {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
-        .tab-btn, .home-btn {
+        .tab-btn {
             background: var(--card-bg);
             color: var(--text-color);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 0.5rem 1.2rem;
+            padding: 0.45rem 1rem;
             border-radius: 20px;
             cursor: pointer;
             font-weight: bold;
+            font-size: 0.9rem;
             transition: all 0.3s ease;
         }
 
-        .tab-btn.active, .tab-btn:hover, .home-btn:hover {
+        .tab-btn.active, .tab-btn:hover {
             background: var(--accent-color);
-            color: #000;
+            color: #fff;
+            border-color: var(--accent-color);
         }
 
         .search-box {
@@ -82,7 +109,7 @@
             padding: 0.4rem 1rem;
             border: 1px solid rgba(255, 255, 255, 0.1);
             width: 100%;
-            max-width: 300px;
+            max-width: 260px;
         }
 
         .search-box input {
@@ -91,67 +118,171 @@
             outline: none;
             color: #fff;
             width: 100%;
-            padding: 0.3rem;
-            font-size: 0.95rem;
+            padding: 0.2rem;
+            font-size: 0.88rem;
         }
 
+        /* Slide Drawer Menu (مطابق لصور توب سينما) */
+        .drawer-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 2500;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .drawer-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .drawer {
+            position: fixed;
+            top: 0; right: -320px;
+            width: 300px;
+            height: 100%;
+            background: var(--drawer-bg);
+            z-index: 2600;
+            box-shadow: -5px 0 25px rgba(0, 0, 0, 0.8);
+            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+            padding: 1.5rem 1rem;
+            border-left: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .drawer.active {
+            right: 0;
+        }
+
+        .drawer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .drawer-title {
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: var(--accent-color);
+        }
+
+        .close-drawer {
+            font-size: 1.8rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close-drawer:hover {
+            color: #fff;
+        }
+
+        .menu-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            font-size: 1.1rem;
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 0.6rem;
+            padding-right: 0.5rem;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        .menu-item {
+            display: block;
+            padding: 0.6rem 0.8rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .menu-item:hover {
+            background: rgba(229, 9, 20, 0.15);
+            color: #fff;
+            padding-right: 1.2rem;
+        }
+
+        .menu-item.badge-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .badge-tag {
+            background: var(--gold);
+            color: #000;
+            font-size: 0.72rem;
+            font-weight: 900;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* Container & Cards */
         .container {
-            padding: 2rem;
-            max-width: 1300px;
+            padding: 1.5rem 2rem;
+            max-width: 1350px;
             margin: 0 auto;
         }
 
-        /* Modern Filter Section - Matching Reference Image */
+        /* Filter Card */
         .filter-card {
             background: var(--card-bg);
             border-radius: 18px;
-            padding: 1.5rem;
+            padding: 1.2rem;
             margin-bottom: 2rem;
             border: 1px solid rgba(255, 255, 255, 0.06);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
         }
 
         .filter-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.2rem;
-            padding-bottom: 0.8rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 1rem;
         }
 
         .filter-title {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: 900;
-            color: var(--text-color);
         }
 
         .reset-btn {
             background: transparent;
-            color: var(--accent-color);
-            border: 1px solid var(--accent-color);
-            padding: 0.4rem 1rem;
+            color: var(--highlight-color);
+            border: 1px solid var(--highlight-color);
+            padding: 0.3rem 0.9rem;
             border-radius: 20px;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
         .reset-btn:hover {
-            background: var(--accent-color);
+            background: var(--highlight-color);
             color: #000;
         }
 
         .filter-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 1rem;
         }
 
         .select-wrapper {
             position: relative;
-            width: 100%;
         }
 
         .select-wrapper select {
@@ -159,26 +290,19 @@
             background: var(--input-bg);
             color: var(--text-color);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 0.8rem 1.2rem;
-            padding-left: 2.5rem;
+            padding: 0.7rem 1.2rem;
+            padding-left: 2.2rem;
             border-radius: 25px;
             outline: none;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: bold;
             cursor: pointer;
             appearance: none;
-            -webkit-appearance: none;
-            transition: border-color 0.3s ease;
         }
 
-        .select-wrapper select:focus {
-            border-color: var(--accent-color);
-        }
-
-        /* Custom Dropdown Arrow Icon */
         .select-wrapper::after {
             content: '❯';
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--text-muted);
             position: absolute;
             left: 1.2rem;
@@ -188,34 +312,51 @@
         }
 
         .section-title {
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
+            font-size: 1.4rem;
+            margin-bottom: 1.2rem;
             border-right: 4px solid var(--accent-color);
             padding-right: 0.8rem;
         }
 
         .movies-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+            gap: 1.2rem;
         }
 
+        /* Poster Card with Ribbon */
         .movie-card {
             background: var(--card-bg);
             border-radius: 12px;
             overflow: hidden;
+            position: relative;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             cursor: pointer;
         }
 
         .movie-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 10px 20px rgba(102, 252, 241, 0.2);
+            transform: translateY(-7px);
+            box-shadow: 0 10px 22px rgba(229, 9, 20, 0.25);
+        }
+
+        .quality-ribbon {
+            position: absolute;
+            top: 12px;
+            left: -32px;
+            background: var(--accent-color);
+            color: #fff;
+            font-size: 0.68rem;
+            font-weight: 900;
+            padding: 4px 32px;
+            transform: rotate(-45deg);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+            z-index: 5;
+            text-transform: uppercase;
         }
 
         .movie-poster {
             width: 100%;
-            height: 270px;
+            height: 260px;
             object-fit: cover;
         }
 
@@ -224,7 +365,7 @@
         }
 
         .movie-title {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: bold;
             white-space: nowrap;
             overflow: hidden;
@@ -234,13 +375,17 @@
         .movie-rating {
             display: flex;
             align-items: center;
-            gap: 0.3rem;
+            justify-content: space-between;
             color: var(--gold);
             font-size: 0.85rem;
             margin-top: 0.4rem;
         }
 
-        /* Load More Button Container */
+        .movie-year {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
         .load-more-container {
             text-align: center;
             margin-top: 2.5rem;
@@ -248,11 +393,11 @@
 
         .load-more-btn {
             background: var(--card-bg);
-            color: var(--accent-color);
+            color: #fff;
             border: 2px solid var(--accent-color);
-            padding: 0.8rem 2.5rem;
+            padding: 0.7rem 2.2rem;
             border-radius: 25px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -260,8 +405,7 @@
 
         .load-more-btn:hover {
             background: var(--accent-color);
-            color: #000;
-            box-shadow: 0 0 15px rgba(102, 252, 241, 0.4);
+            box-shadow: 0 0 15px rgba(229, 9, 20, 0.4);
         }
 
         /* Modal Player Window */
@@ -270,8 +414,8 @@
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 2000;
+            background: rgba(0,0,0,0.92);
+            z-index: 3000;
             justify-content: center;
             align-items: center;
             padding: 1rem;
@@ -294,7 +438,6 @@
             color: #fff;
             cursor: pointer;
             z-index: 10;
-            text-shadow: 0 0 5px #000;
         }
 
         .player-container {
@@ -312,27 +455,25 @@
         }
 
         .controls-bar {
-            padding: 1rem 1.5rem;
+            padding: 0.8rem 1.2rem;
             background: #10141f;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             display: flex;
             align-items: center;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 12px;
         }
 
         .control-group {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .controls-bar select {
             background: var(--input-bg);
             color: #fff;
-            border: 1px solid var(--accent-color);
+            border: 1px solid var(--highlight-color);
             padding: 0.4rem 0.8rem;
             border-radius: 8px;
             outline: none;
@@ -341,7 +482,7 @@
         }
 
         .modal-details {
-            padding: 1.5rem;
+            padding: 1.2rem;
         }
 
         footer {
@@ -351,43 +492,99 @@
             color: var(--text-muted);
             border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
+
+        @media (max-width: 768px) {
+            .nav-tabs { display: none; }
+            .search-box { max-width: 180px; }
+        }
     </style>
 </head>
 <body>
 
+    <!-- Header Bar -->
     <header>
-        <a class="logo" onclick="resetToHome()">GoodNight 🌙</a>
-        <div class="nav-tabs">
-            <button class="tab-btn active" id="moviesTab" onclick="switchType('movie')">🎬 أفلام</button>
-            <button class="tab-btn" id="tvTab" onclick="switchType('tv')">📺 مسلسلات</button>
-            <button class="home-btn" onclick="resetToHome()">🏠 الرئيسية</button>
+        <div class="header-right">
+            <button class="menu-btn" onclick="toggleDrawer()">☰</button>
+            <a class="logo" onclick="resetToHome()">GoodNight 🌙</a>
         </div>
+
+        <div class="nav-tabs">
+            <button class="tab-btn active" id="latestTab" onclick="filterCategory('latest')">🆕 المضاف حديثاً</button>
+            <button class="tab-btn" id="moviesTab" onclick="filterCategory('movie')">🎬 أفلام</button>
+            <button class="tab-btn" id="tvTab" onclick="filterCategory('tv')">📺 مسلسلات</button>
+            <button class="tab-btn" id="animeTab" onclick="filterCategory('anime')">🎌 أنمي</button>
+        </div>
+
         <div class="search-box">
             <input type="text" id="searchInput" placeholder="ابحث باللغة العربية أو الإنجليزية...">
         </div>
     </header>
 
+    <!-- Side Drawer Menu (القائمة الجانبية) -->
+    <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
+    <div class="drawer" id="sideDrawer">
+        <div class="drawer-header">
+            <span class="drawer-title">أقسام الموقع 📽️</span>
+            <span class="close-drawer" onclick="toggleDrawer()">&times;</span>
+        </div>
+
+        <!-- Section 1: Latest -->
+        <div class="menu-section">
+            <a class="menu-item" onclick="filterCategory('latest')">🔥 المضاف حديثاً (أحدث الإضافات)</a>
+        </div>
+
+        <!-- Section 2: Movies -->
+        <div class="menu-section">
+            <div class="section-header">الأفلام</div>
+            <a class="menu-item" onclick="filterCategory('movie', 'US')">🎬 أفلام أجنبية</a>
+            <a class="menu-item" onclick="filterCategory('movie', 'JP', '16')">🎌 أفلام أنمي</a>
+            <a class="menu-item" onclick="filterCategory('movie', 'KR,CN,TH')">🌏 أفلام آسيوية</a>
+            <a class="menu-item" onclick="filterCategory('movie', 'IN')">🇮🇳 أفلام هندية</a>
+            <a class="menu-item" onclick="filterCategory('movie', 'EG,SA,AE,KW')">🇸🇦 أفلام عربية</a>
+            <a class="menu-item badge-item" onclick="filterCategory('movie', '', '', 'vote_average.desc')">
+                <span>⭐ الأفلام الأعلى تقييماً</span>
+                <span class="badge-tag">IMDb</span>
+            </a>
+        </div>
+
+        <!-- Section 3: TV Series -->
+        <div class="menu-section">
+            <div class="section-header">المسلسلات</div>
+            <a class="menu-item" onclick="filterCategory('tv', 'US,GB')">📺 مسلسلات أجنبية</a>
+            <a class="menu-item" onclick="filterCategory('tv', 'KR,CN')">🎎 القسم الآسيوي (كوري / صيني)</a>
+            <a class="menu-item" onclick="filterCategory('tv', 'JP', '16')">💥 مسلسلات الأنمي</a>
+            <a class="menu-item" onclick="filterCategory('tv', 'TR')">🇹🇷 مسلسلات تركية</a>
+            <a class="menu-item" onclick="filterCategory('tv', 'EG,SA,AE,KW')">🇸🇦 مسلسلات عربية</a>
+            <a class="menu-item badge-item" onclick="filterCategory('tv', '', '', 'vote_average.desc')">
+                <span>⭐ المسلسلات الأعلى تقييماً</span>
+                <span class="badge-tag">IMDb</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
     <div class="container">
 
         <!-- Modern Filter Card -->
         <div class="filter-card">
             <div class="filter-header">
-                <h3 class="filter-title">التصفية</h3>
-                <button class="reset-btn" onclick="resetToHome()">🔄 إعادة ضبط / العودة للرئيسية</button>
+                <h3 class="filter-title">التصفية والفلترة</h3>
+                <button class="reset-btn" onclick="resetToHome()">🔄 الرئيسية / إعادة ضبط</button>
             </div>
             
             <div class="filter-grid">
                 <!-- Country -->
                 <div class="select-wrapper">
                     <select id="countrySelect" onchange="applyFilters(true)">
-                        <option value="">كل الأقسام / البلدان</option>
+                        <option value="">جميع الدول / الأقسام</option>
                         <option value="US">أجنبي / أمريكي 🇺🇸</option>
+
                         <option value="KR">كوري 🇰🇷</option>
                         <option value="TR">تركي 🇹🇷</option>
                         <option value="IN">هندي 🇮🇳</option>
-                        <option value="JP">ياباني 🇯🇵</option>
+                        <option value="JP">ياباني / أنمي 🇯🇵</option>
                         <option value="CN">صيني 🇨🇳</option>
-                        <option value="EG,SA,AE,KW">عربي 🇸🇦🇪🇬</option>
+                        <option value="EG,SA,AE,KW">عربي 🇸🇦🇪غت</option>
                         <option value="GB,FR,ES,DE">أوروبي 🇪🇺</option>
                     </select>
                 </div>
@@ -395,7 +592,7 @@
                 <!-- Genre -->
                 <div class="select-wrapper">
                     <select id="genreSelect" onchange="applyFilters(true)">
-                        <option value="">كل الأنواع / التصنيفات</option>
+                        <option value="">جميع الأنواع والتصنيفات</option>
                         <option value="28">أكشن</option>
                         <option value="27">رعب</option>
                         <option value="35">كوميدي</option>
@@ -412,7 +609,7 @@
                 <!-- Year -->
                 <div class="select-wrapper">
                     <select id="yearSelect" onchange="applyFilters(true)">
-                        <option value="">كل السنوات</option>
+                        <option value="">جميع السنوات</option>
                         <option value="2026">2026</option>
                         <option value="2025">2025</option>
                         <option value="2024">2024</option>
@@ -420,23 +617,21 @@
                         <option value="2022">2022</option>
                         <option value="2021">2021</option>
                         <option value="2020">2020</option>
-                        <option value="2019">2019</option>
-                        <option value="2018">2018</option>
                     </select>
                 </div>
 
                 <!-- Sort -->
                 <div class="select-wrapper">
                     <select id="sortSelect" onchange="applyFilters(true)">
-                        <option value="popularity.desc">الأعلى شعبية 🔥</option>
+                        <option value="primary_release_date.desc">المضاف حديثاً 🆕</option>
+                        <option value="popularity.desc">الأكثر شعبية 🔥</option>
                         <option value="vote_average.desc">الأعلى تقييماً ⭐</option>
-                        <option value="primary_release_date.desc">الأحدث إصداراً 🆕</option>
                     </select>
                 </div>
             </div>
         </div>
 
-        <h2 class="section-title" id="gridTitle">الأفلام المعروضة 🔥</h2>
+        <h2 class="section-title" id="gridTitle">المضاف حديثاً 🆕</h2>
         <div class="movies-grid" id="moviesGrid"></div>
         
         <div class="load-more-container" id="loadMoreContainer">
@@ -477,7 +672,7 @@
             </div>
 
             <div class="modal-details">
-                <h2 id="modalTitle" style="color: var(--accent-color);"></h2>
+                <h2 id="modalTitle" style="color: var(--highlight-color);"></h2>
                 <p id="modalOverview" style="margin-top: 0.5rem; color: var(--text-muted);"></p>
             </div>
         </div>
@@ -509,31 +704,40 @@
         const seasonSelect = document.getElementById('seasonSelect');
         const episodeSelect = document.getElementById('episodeSelect');
         const tvControls = document.getElementById('tvControls');
-        const moviesTab = document.getElementById('moviesTab');
-        const tvTab = document.getElementById('tvTab');
         const countrySelect = document.getElementById('countrySelect');
         const genreSelect = document.getElementById('genreSelect');
         const yearSelect = document.getElementById('yearSelect');
         const sortSelect = document.getElementById('sortSelect');
         const loadMoreContainer = document.getElementById('loadMoreContainer');
+        const sideDrawer = document.getElementById('sideDrawer');
+        const drawerOverlay = document.getElementById('drawerOverlay');
 
-        function switchType(type) {
-            currentType = type;
-            searchInput.value = '';
-            countrySelect.value = '';
-            genreSelect.value = '';
-            yearSelect.value = '';
-            sortSelect.value = 'popularity.desc';
+        function toggleDrawer() {
+            sideDrawer.classList.toggle('active');
+            drawerOverlay.classList.toggle('active');
+        }
 
-            if (type === 'movie') {
-                moviesTab.classList.add('active');
-                tvTab.classList.remove('active');
-                gridTitle.innerText = "الأفلام المعروضة 🔥";
+        function filterCategory(type, country = '', genre = '', sort = '') {
+            if (sideDrawer.classList.contains('active')) toggleDrawer();
+
+            if (type === 'latest') {
+                currentType = 'movie';
+                sortSelect.value = 'primary_release_date.desc';
+                gridTitle.innerText = "المضاف حديثاً 🆕";
+            } else if (type === 'anime') {
+                currentType = 'tv';
+                genreSelect.value = '16';
+                countrySelect.value = 'JP';
+                gridTitle.innerText = "قسم الأنمي 🎌";
             } else {
-                tvTab.classList.add('active');
-                moviesTab.classList.remove('active');
-                gridTitle.innerText = "المسلسلات المعروضة 🔥";
+                currentType = type;
+                gridTitle.innerText = type === 'movie' ? "أفلام 🎬" : "مسلسلات 📺";
             }
+
+            if (country) countrySelect.value = country;
+            if (genre) genreSelect.value = genre;
+            if (sort) sortSelect.value = sort;
+
             applyFilters(true);
         }
 
@@ -542,8 +746,8 @@
             countrySelect.value = '';
             genreSelect.value = '';
             yearSelect.value = '';
-            sortSelect.value = 'popularity.desc';
-            switchType('movie');
+            sortSelect.value = 'primary_release_date.desc';
+            filterCategory('latest');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -629,13 +833,19 @@
             items.forEach(item => {
                 if (!item.poster_path) return;
                 const title = item.title || item.name;
+                const releaseYear = (item.release_date || item.first_air_date || '').substring(0, 4);
+
                 const card = document.createElement('div');
                 card.className = 'movie-card';
                 card.innerHTML = `
+                    <div class="quality-ribbon">WEB-DL</div>
                     <img class="movie-poster" src="${IMG_URL + item.poster_path}" alt="${title}">
                     <div class="movie-info">
                         <div class="movie-title">${title}</div>
-                        <div class="movie-rating">★ ${item.vote_average ? item.vote_average.toFixed(1) : 'N/A'}</div>
+                        <div class="movie-rating">
+                            <span>★ ${item.vote_average ? item.vote_average.toFixed(1) : 'N/A'}</span>
+                            <span class="movie-year">${releaseYear}</span>
+                        </div>
                     </div>
                 `;
                 card.onclick = () => openPlayer(item);
@@ -758,7 +968,7 @@
             }, 500);
         });
 
-        applyFilters(true);
+        filterCategory('latest');
     </script>
 </body>
 </html>
