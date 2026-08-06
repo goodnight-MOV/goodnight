@@ -1941,5 +1941,20 @@
         loadSliderItems();
         filterCategory('latest');
     </script>
+    <!-- كود دالة المشاركة الذكية -->
+<script>
+function shareSite() {
+  if (navigator.share) {
+    navigator.share({
+      title: 'GoodNight 🌙',
+      text: 'شاهد أحدث الأفلام والمسلسلات مجاناً على موقع GoodNight!',
+      url: window.location.href,
+    }).catch(console.error);
+  } else {
+    navigator.clipboard.writeText(window.location.href);
+    alert('تم نسخ رابط الموقع بنجاح!');
+  }
+}
+</script>
 </body>
 </html>
