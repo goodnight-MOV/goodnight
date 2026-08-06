@@ -11,7 +11,7 @@
             --card-bg: #151924;
             --drawer-bg: #11141e;
             --input-bg: #0d1017;
-            --accent-color: #e50914; /* أحمر سينمائي مميز */
+            --accent-color: #e50914; /* أحمر سينمائي */
             --highlight-color: #66fcf1;
             --text-color: #ffffff;
             --text-muted: #a0a6b5;
@@ -122,7 +122,7 @@
             font-size: 0.88rem;
         }
 
-        /* Slide Drawer Menu (مطابق لصور توب سينما) */
+        /* Slide Drawer Menu */
         .drawer-overlay {
             position: fixed;
             top: 0; left: 0;
@@ -189,7 +189,7 @@
         }
 
         .section-header {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 900;
             color: #fff;
             margin-bottom: 0.6rem;
@@ -324,7 +324,6 @@
             gap: 1.2rem;
         }
 
-        /* Poster Card with Ribbon */
         .movie-card {
             background: var(--card-bg);
             border-radius: 12px;
@@ -509,10 +508,10 @@
         </div>
 
         <div class="nav-tabs">
-            <button class="tab-btn active" id="latestTab" onclick="filterCategory('latest')">🆕 المضاف حديثاً</button>
-            <button class="tab-btn" id="moviesTab" onclick="filterCategory('movie')">🎬 أفلام</button>
-            <button class="tab-btn" id="tvTab" onclick="filterCategory('tv')">📺 مسلسلات</button>
-            <button class="tab-btn" id="animeTab" onclick="filterCategory('anime')">🎌 أنمي</button>
+            <button class="tab-btn active" id="latestTab" onclick="filterCategory('latest')">المضاف حديثاً</button>
+            <button class="tab-btn" id="moviesTab" onclick="filterCategory('movie')">أفلام</button>
+            <button class="tab-btn" id="tvTab" onclick="filterCategory('tv')">مسلسلات</button>
+            <button class="tab-btn" id="animeTab" onclick="filterCategory('anime')">أنمي</button>
         </div>
 
         <div class="search-box">
@@ -524,39 +523,49 @@
     <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
     <div class="drawer" id="sideDrawer">
         <div class="drawer-header">
-            <span class="drawer-title">أقسام الموقع 📽️</span>
+            <span class="drawer-title">أقسام الموقع</span>
             <span class="close-drawer" onclick="toggleDrawer()">&times;</span>
         </div>
 
         <!-- Section 1: Latest -->
         <div class="menu-section">
-            <a class="menu-item" onclick="filterCategory('latest')">🔥 المضاف حديثاً (أحدث الإضافات)</a>
+            <a class="menu-item" onclick="filterCategory('latest')">المضاف حديثاً (أحدث الإضافات)</a>
         </div>
 
-        <!-- Section 2: Movies -->
+        <!-- Section 2: Streaming Networks (منصات العرض) -->
+        <div class="menu-section">
+            <div class="section-header">منصات العرض العالمية</div>
+            <a class="menu-item" onclick="filterCategory('tv', '', '', '', '213', 'محتوى نتفليكس (Netflix)')">نتفليكس (Netflix)</a>
+            <a class="menu-item" onclick="filterCategory('tv', '', '', '', '49', 'محتوى HBO')">إتش بي أوه (HBO)</a>
+            <a class="menu-item" onclick="filterCategory('tv', '', '', '', '2739', 'محتوى ديزني بلس (Disney+)')">ديزني بلس (Disney+)</a>
+            <a class="menu-item" onclick="filterCategory('tv', '', '', '', '2552', 'محتوى أبل تي في (Apple TV+)')">أبل تي في (Apple TV+)</a>
+            <a class="menu-item" onclick="filterCategory('tv', '', '', '', '4', 'محتوى بي بي سي (BBC)')">بي بي سي (BBC)</a>
+        </div>
+
+        <!-- Section 3: Movies -->
         <div class="menu-section">
             <div class="section-header">الأفلام</div>
-            <a class="menu-item" onclick="filterCategory('movie', 'US')">🎬 أفلام أجنبية</a>
-            <a class="menu-item" onclick="filterCategory('movie', 'JP', '16')">🎌 أفلام أنمي</a>
-            <a class="menu-item" onclick="filterCategory('movie', 'KR,CN,TH')">🌏 أفلام آسيوية</a>
-            <a class="menu-item" onclick="filterCategory('movie', 'IN')">🇮🇳 أفلام هندية</a>
-            <a class="menu-item" onclick="filterCategory('movie', 'EG,SA,AE,KW')">🇸🇦 أفلام عربية</a>
+            <a class="menu-item" onclick="filterCategory('movie', 'US')">أفلام أجنبية</a>
+            <a class="menu-item" onclick="filterCategory('movie', 'JP', '16')">أفلام أنمي</a>
+            <a class="menu-item" onclick="filterCategory('movie', 'KR,CN,TH')">أفلام آسيوية</a>
+            <a class="menu-item" onclick="filterCategory('movie', 'IN')">أفلام هندية</a>
+            <a class="menu-item" onclick="filterCategory('movie', 'EG,SA,AE,KW')">أفلام عربية</a>
             <a class="menu-item badge-item" onclick="filterCategory('movie', '', '', 'vote_average.desc')">
-                <span>⭐ الأفلام الأعلى تقييماً</span>
+                <span>الأفلام الأعلى تقييماً</span>
                 <span class="badge-tag">IMDb</span>
             </a>
         </div>
 
-        <!-- Section 3: TV Series -->
+        <!-- Section 4: TV Series -->
         <div class="menu-section">
             <div class="section-header">المسلسلات</div>
-            <a class="menu-item" onclick="filterCategory('tv', 'US,GB')">📺 مسلسلات أجنبية</a>
-            <a class="menu-item" onclick="filterCategory('tv', 'KR,CN')">🎎 القسم الآسيوي (كوري / صيني)</a>
-            <a class="menu-item" onclick="filterCategory('tv', 'JP', '16')">💥 مسلسلات الأنمي</a>
-            <a class="menu-item" onclick="filterCategory('tv', 'TR')">🇹🇷 مسلسلات تركية</a>
-            <a class="menu-item" onclick="filterCategory('tv', 'EG,SA,AE,KW')">🇸🇦 مسلسلات عربية</a>
+            <a class="menu-item" onclick="filterCategory('tv', 'US,GB')">مسلسلات أجنبية</a>
+            <a class="menu-item" onclick="filterCategory('tv', 'KR,CN')">القسم الآسيوي (كوري / صيني)</a>
+            <a class="menu-item" onclick="filterCategory('tv', 'JP', '16')">مسلسلات الأنمي</a>
+            <a class="menu-item" onclick="filterCategory('tv', 'TR')">مسلسلات تركية</a>
+            <a class="menu-item" onclick="filterCategory('tv', 'EG,SA,AE,KW')">مسلسلات عربية</a>
             <a class="menu-item badge-item" onclick="filterCategory('tv', '', '', 'vote_average.desc')">
-                <span>⭐ المسلسلات الأعلى تقييماً</span>
+                <span>المسلسلات الأعلى تقييماً</span>
                 <span class="badge-tag">IMDb</span>
             </a>
         </div>
@@ -569,7 +578,7 @@
         <div class="filter-card">
             <div class="filter-header">
                 <h3 class="filter-title">التصفية والفلترة</h3>
-                <button class="reset-btn" onclick="resetToHome()">🔄 الرئيسية / إعادة ضبط</button>
+                <button class="reset-btn" onclick="resetToHome()">الرئيسية / إعادة ضبط</button>
             </div>
             
             <div class="filter-grid">
@@ -577,15 +586,14 @@
                 <div class="select-wrapper">
                     <select id="countrySelect" onchange="applyFilters(true)">
                         <option value="">جميع الدول / الأقسام</option>
-                        <option value="US">أجنبي / أمريكي 🇺🇸</option>
-
-                        <option value="KR">كوري 🇰🇷</option>
-                        <option value="TR">تركي 🇹🇷</option>
-                        <option value="IN">هندي 🇮🇳</option>
-                        <option value="JP">ياباني / أنمي 🇯🇵</option>
-                        <option value="CN">صيني 🇨🇳</option>
-                        <option value="EG,SA,AE,KW">عربي 🇸🇦🇪غت</option>
-                        <option value="GB,FR,ES,DE">أوروبي 🇪🇺</option>
+                        <option value="US">أجنبي / أمريكي</option>
+                        <option value="KR">كوري</option>
+                        <option value="TR">تركي</option>
+                        <option value="IN">هندي</option>
+                        <option value="JP">ياباني / أنمي</option>
+                        <option value="CN">صيني</option>
+                        <option value="EG,SA,AE,KW">عربي</option>
+                        <option value="GB,FR,ES,DE">أوروبي</option>
                     </select>
                 </div>
 
@@ -623,19 +631,19 @@
                 <!-- Sort -->
                 <div class="select-wrapper">
                     <select id="sortSelect" onchange="applyFilters(true)">
-                        <option value="primary_release_date.desc">المضاف حديثاً 🆕</option>
-                        <option value="popularity.desc">الأكثر شعبية 🔥</option>
-                        <option value="vote_average.desc">الأعلى تقييماً ⭐</option>
+                        <option value="primary_release_date.desc">المضاف حديثاً</option>
+                        <option value="popularity.desc">الأكثر شعبية</option>
+                        <option value="vote_average.desc">الأعلى تقييماً</option>
                     </select>
                 </div>
             </div>
         </div>
 
-        <h2 class="section-title" id="gridTitle">المضاف حديثاً 🆕</h2>
+        <h2 class="section-title" id="gridTitle">المضاف حديثاً</h2>
         <div class="movies-grid" id="moviesGrid"></div>
         
         <div class="load-more-container" id="loadMoreContainer">
-            <button class="load-more-btn" id="loadMoreBtn" onclick="loadNextPage()">تحميل المزيد 🔄</button>
+            <button class="load-more-btn" id="loadMoreBtn" onclick="loadNextPage()">تحميل المزيد</button>
         </div>
     </div>
 
@@ -688,6 +696,7 @@
         const IMG_URL = 'https://image.tmdb.org/t/p/w500';
 
         let currentType = 'movie'; 
+        let currentNetwork = '';
         let currentItem = null;
         let currentPage = 1;
         let isSearching = false;
@@ -717,31 +726,36 @@
             drawerOverlay.classList.toggle('active');
         }
 
-        function filterCategory(type, country = '', genre = '', sort = '') {
+        function filterCategory(type, country = '', genre = '', sort = '', network = '', customTitle = '') {
+            currentNetwork = network;
             if (sideDrawer.classList.contains('active')) toggleDrawer();
 
-            if (type === 'latest') {
+            if (customTitle) {
+                currentType = type;
+                gridTitle.innerText = customTitle;
+            } else if (type === 'latest') {
                 currentType = 'movie';
                 sortSelect.value = 'primary_release_date.desc';
-                gridTitle.innerText = "المضاف حديثاً 🆕";
+                gridTitle.innerText = "المضاف حديثاً";
             } else if (type === 'anime') {
                 currentType = 'tv';
                 genreSelect.value = '16';
                 countrySelect.value = 'JP';
-                gridTitle.innerText = "قسم الأنمي 🎌";
+                gridTitle.innerText = "قسم الأنمي";
             } else {
                 currentType = type;
-                gridTitle.innerText = type === 'movie' ? "أفلام 🎬" : "مسلسلات 📺";
+                gridTitle.innerText = type === 'movie' ? "الأفلام" : "المسلسلات";
             }
 
-            if (country) countrySelect.value = country;
-            if (genre) genreSelect.value = genre;
+            if (country) countrySelect.value = country; else countrySelect.value = '';
+            if (genre) genreSelect.value = genre; else if (type !== 'anime') genreSelect.value = '';
             if (sort) sortSelect.value = sort;
 
             applyFilters(true);
         }
 
         function resetToHome() {
+            currentNetwork = '';
             searchInput.value = '';
             countrySelect.value = '';
             genreSelect.value = '';
@@ -765,6 +779,10 @@
 
             let url = `${BASE_URL}/discover/${currentType}?api_key=${API_KEY}&language=ar-SA&include_adult=false&sort_by=${sort}&page=${currentPage}`;
             
+            if (currentNetwork) {
+                url += `&with_networks=${currentNetwork}`;
+            }
+
             if (sort === 'vote_average.desc') {
                 url += `&vote_count.gte=150`;
             }
