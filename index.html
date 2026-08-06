@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoodNight 🌙 | عالم الأفلام والسهرات</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b0c10;
+            --card-bg: #1f2833;
+            --accent-color: #66fcf1;
+            --text-color: #ffffff;
+            --text-muted: #c5c6c7;
+            --gold: #f5c518;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            background: rgba(11, 12, 16, 0.95);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--accent-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: var(--card-bg);
+            border-radius: 25px;
+            padding: 0.4rem 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #fff;
+            width: 100%;
+            padding: 0.3rem;
+            font-size: 0.95rem;
+        }
+
+        /* Hero Banner */
+        .hero {
+            position: relative;
+            height: 50vh;
+            background: linear-gradient(to top, var(--bg-color), transparent), url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=1200') center/cover;
+            display: flex;
+            align-items: flex-end;
+            padding: 3rem 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .hero-content {
+            max-width: 600px;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        .hero-desc {
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        /* Movie Grid */
+        .container {
+            padding: 0 2rem 3rem 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-right: 4px solid var(--accent-color);
+            padding-right: 0.8rem;
+        }
+
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .movie-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 20px rgba(102, 252, 241, 0.2);
+        }
+
+        .movie-poster {
+            width: 100%;
+            height: 270px;
+            object-fit: cover;
+        }
+
+        .movie-info {
+            padding: 0.8rem;
+        }
+
+        .movie-title {
+            font-size: 1rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .movie-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            color: var(--gold);
+            font-size: 0.85rem;
+            margin-top: 0.4rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: #060709;
+            color: var(--text-muted);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 600px) {
+            .hero { height: 40vh; padding: 1.5rem 1rem; }
+            .hero-title { font-size: 1.8rem; }
+            .container { padding: 0 1rem 2rem 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="#" class="logo">
+            <span>GoodNight</span> 🌙
+        </a>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="ابحث عن فيلمك المفضل للسهرة...">
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">سهرة الليلة على GoodNight</h1>
+            <p class="hero-desc">استكشف أحدث الأفلام العالمية والتقييمات، واختر فيلمك المفضل لسهرة ممتعة.</p>
+        </div>
+    </section>
+
+    <div class="container">
+        <h2 class="section-title">الأفلام الأكثر شعبية 🔥</h2>
+        <div class="movies-grid" id="moviesGrid"></div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 GoodNight Movies | تم التطوير للعرض على GitHub Pages 🚀</p>
+    </footer>
+
+    <script>
+        const demoMovies = [
+            { title: "Oppenheimer", rating: 8.9, poster: "https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv3B21S3R.jpg" },
+            { title: "Interstellar", rating: 8.7, poster: "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg" },
+            { title: "The Dark Knight", rating: 9.0, poster: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg" },
+            { title: "Inception", rating: 8.8, poster: "https://image.tmdb.org/t/p/w500/oYuLE291o911B3iB19y291.jpg" },
+            { title: "Dune: Part Two", rating: 8.5, poster: "https://image.tmdb.org/t/p/w500/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg" },
+            { title: "Spider-Man: Across the Spider-Verse", rating: 8.7, poster: "https://image.tmdb.org/t/p/w500/8Vt6mC92FTS321.jpg" }
+        ];
+
+        const API_KEY = ''; 
+        const moviesGrid = document.getElementById('moviesGrid');
+        const searchInput = document.getElementById('searchInput');
+
+        function renderMovies(movies) {
+            moviesGrid.innerHTML = '';
+            movies.forEach(movie => {
+                const card = document.createElement('div');
+                card.className = 'movie-card';
+                card.innerHTML = `
+                    <img class="movie-poster" src="${movie.poster || movie.poster_path}" alt="${movie.title}">
+                    <div class="movie-info">
+                        <div class="movie-title">${movie.title}</div>
+                        <div class="movie-rating">★ ${movie.rating || movie.vote_average || 'N/A'}</div>
+                    </div>
+                `;
+                moviesGrid.appendChild(card);
+            });
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            const filtered = demoMovies.filter(m => m.title.toLowerCase().includes(query));
+            renderMovies(filtered);
+        });
+
+        async function fetchMovies() {
+            if (API_KEY) {
+                try {
+                    const res = await fetch(`https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}&language=ar`);
+                    const data = await res.json();
+                    renderMovies(data.results.map(m => ({
+                        title: m.title,
+                        rating: m.vote_average.toFixed(1),
+                        poster: `https://image.tmdb.org/t/p/w500${m.poster_path}`
+                    })));
+                } catch (err) {
+                    renderMovies(demoMovies);
+                }
+            } else {
+                renderMovies(demoMovies);
+            }
+        }
+
+        fetchMovies();
+    </script>
+</body>
+</html>
