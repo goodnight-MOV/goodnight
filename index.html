@@ -505,10 +505,10 @@
             background: rgba(0, 0, 0, 0.85);
             border: 1px solid var(--red-primary);
             color: #fff;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             font-weight: 900;
-            padding: 3px 8px;
-            border-radius: 4px;
+            padding: 4px 10px;
+            border-radius: 6px;
             z-index: 5;
         }
 
@@ -741,12 +741,10 @@
             <span class="close-drawer" onclick="toggleDrawer()">&times;</span>
         </div>
 
-        <!-- Section 1: Latest -->
         <div class="menu-section">
             <a class="menu-item" onclick="filterCategory('latest')">المضاف حديثاً (أحدث الإضافات)</a>
         </div>
 
-        <!-- Section 2: Streaming Platforms -->
         <div class="menu-section">
             <div class="section-header">منصات العرض العالمية</div>
             <a class="menu-item" onclick="filterCategory('tv', '', '', '', '213', 'محتوى نتفليكس (Netflix)')">نتفليكس (Netflix)</a>
@@ -756,7 +754,6 @@
             <a class="menu-item" onclick="filterCategory('tv', '', '', '', '4', 'محتوى بي بي سي (BBC)')">بي بي سي (BBC)</a>
         </div>
 
-        <!-- Section 3: Movies -->
         <div class="menu-section">
             <div class="section-header">الأفلام</div>
             <a class="menu-item" onclick="filterCategory('movie', 'US')">أفلام أجنبية</a>
@@ -770,7 +767,6 @@
             </a>
         </div>
 
-        <!-- Section 4: TV Series -->
         <div class="menu-section">
             <div class="section-header">المسلسلات</div>
             <a class="menu-item" onclick="filterCategory('tv', 'US,GB')">مسلسلات أجنبية</a>
@@ -874,7 +870,7 @@
                     <label style="font-size: 0.85rem; color: var(--text-muted);">السيرفر:</label>
                     <select id="serverSelect" onchange="updatePlayerSrc()">
                         <option value="vidlink">سيرفر 1 (VidLink)</option>
-                        <option value="vidsrc_me">سيرفر 2 (VidSrc Me - للمسلسلات الكلاسيكية)</option>
+                        <option value="vidsrc_me">سيرفر 2 (VidSrc Me)</option>
                         <option value="vidsrc_cc">سيرفر 3 (VidSrc CC)</option>
                         <option value="vidsrc_pro">سيرفر 4 (VidSrc Pro)</option>
                         <option value="autoembed">سيرفر 5 (AutoEmbed)</option>
@@ -1115,15 +1111,16 @@
                 return;
             }
 
-            items.forEach(item => {
+            items.forEach((item, index) => {
                 if (!item.poster_path) return;
                 const title = item.title || item.name;
                 const releaseYear = (item.release_date || item.first_air_date || '').substring(0, 4);
+                const badgeId = `badge-${currentType}-${item.id}-${index}`;
 
                 const card = document.createElement('div');
                 card.className = 'content-card';
                 card.innerHTML = `
-                    <div class="card-badge">${currentType === 'tv' ? 'حلقة' : 'HD'}</div>
+                    <div class="card-badge" id="${badgeId}">${currentType === 'tv' ? 'حلقة ...' : 'HD'}</div>
                     <img class="poster-img" src="${IMG_URL + item.poster_path}" alt="${title}">
                     <div class="card-body">
                         <div class="card-title">${title}</div>
@@ -1135,7 +1132,32 @@
                 `;
                 card.onclick = () => openPlayer(item);
                 moviesGrid.appendChild(card);
+
+                // جلب رقم الحلقة تلقائياً للمسلسلات
+                if (currentType === 'tv') {
+                    fetchTvBadgeInfo(item.id, badgeId);
+                }
             });
+        }
+
+        async function fetchTvBadgeInfo(id, badgeId) {
+            try {
+                const res = await fetch(`${BASE_URL}/tv/${id}?api_key=${API_KEY}&language=ar-SA`);
+                const data = await res.json();
+                const badgeEl = document.getElementById(badgeId);
+                if (badgeEl) {
+                    let epNum = 1;
+                    if (data.last_episode_to_air && data.last_episode_to_air.episode_number) {
+                        epNum = data.last_episode_to_air.episode_number;
+                    } else if (data.number_of_episodes) {
+                        epNum = data.number_of_episodes;
+                    }
+                    badgeEl.innerText = `حلقة ${epNum}`;
+                }
+            } catch (e) {
+                const badgeEl = document.getElementById(badgeId);
+                if (badgeEl) badgeEl.innerText = 'حلقة 1';
+            }
         }
 
         async function openPlayer(item) {
