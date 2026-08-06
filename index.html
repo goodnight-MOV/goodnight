@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GoodNight 🌙 | أفلام ومسلسلات</title>
+    <title>GoodNight 🌙 | مشاهدة أفلام ومسلسلات</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #0b0d12;
-            --card-bg: #151924;
-            --drawer-bg: #11141e;
-            --input-bg: #0d1017;
-            --accent-color: #e50914; /* أحمر سينمائي */
-            --highlight-color: #66fcf1;
+            --bg-main: #0e1117;
+            --bg-card: #181c26;
+            --red-primary: #c81919;
+            --red-hover: #e50914;
+            --blue-accent: #1e293b;
             --text-color: #ffffff;
-            --text-muted: #a0a6b5;
+            --text-muted: #94a3b8;
             --gold: #f5c518;
         }
 
@@ -26,388 +25,375 @@
         }
 
         body {
-            background-color: var(--bg-color);
+            background-color: var(--bg-main);
             color: var(--text-color);
             line-height: 1.6;
             overflow-x: hidden;
         }
 
-        /* Header Bar */
-        header {
-            background: rgba(11, 13, 18, 0.95);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 0.8rem 1.5rem;
+        /* 1. Top Red Bar */
+        .top-nav {
+            background-color: var(--red-primary);
+            padding: 0.6rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 1rem;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
-        .header-right {
+        .top-links {
             display: flex;
-            align-items: center;
-            gap: 12px;
+            gap: 18px;
+            list-style: none;
         }
 
-        .menu-btn {
-            background: var(--card-bg);
+        .top-links a {
             color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            font-size: 1.4rem;
-            padding: 0.4rem 0.8rem;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .menu-btn:hover {
-            background: var(--accent-color);
-            border-color: var(--accent-color);
-        }
-
-        .logo {
-            font-size: 1.6rem;
-            font-weight: 900;
-            color: var(--highlight-color);
             text-decoration: none;
-            cursor: pointer;
-        }
-
-        .nav-tabs {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .tab-btn {
-            background: var(--card-bg);
-            color: var(--text-color);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 0.45rem 1rem;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        .tab-btn.active, .tab-btn:hover {
-            background: var(--accent-color);
-            color: #fff;
-            border-color: var(--accent-color);
-        }
-
-        .search-box {
-            display: flex;
-            align-items: center;
-            background: var(--card-bg);
-            border-radius: 25px;
-            padding: 0.4rem 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            width: 100%;
-            max-width: 260px;
-        }
-
-        .search-box input {
-            background: transparent;
-            border: none;
-            outline: none;
-            color: #fff;
-            width: 100%;
-            padding: 0.2rem;
-            font-size: 0.88rem;
-        }
-
-        /* Slide Drawer Menu */
-        .drawer-overlay {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(4px);
-            z-index: 2500;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-
-        .drawer-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .drawer {
-            position: fixed;
-            top: 0; right: -320px;
-            width: 300px;
-            height: 100%;
-            background: var(--drawer-bg);
-            z-index: 2600;
-            box-shadow: -5px 0 25px rgba(0, 0, 0, 0.8);
-            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow-y: auto;
-            padding: 1.5rem 1rem;
-            border-left: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .drawer.active {
-            right: 0;
-        }
-
-        .drawer-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.8rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .drawer-title {
-            font-size: 1.3rem;
-            font-weight: 900;
-            color: var(--accent-color);
-        }
-
-        .close-drawer {
-            font-size: 1.8rem;
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-
-        .close-drawer:hover {
-            color: #fff;
-        }
-
-        .menu-section {
-            margin-bottom: 1.5rem;
-        }
-
-        .section-header {
-            font-size: 1.05rem;
-            font-weight: 900;
-            color: #fff;
-            margin-bottom: 0.6rem;
-            padding-right: 0.5rem;
-            border-right: 3px solid var(--accent-color);
-        }
-
-        .menu-item {
-            display: block;
-            padding: 0.6rem 0.8rem;
-            color: var(--text-muted);
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: bold;
+            font-weight: 700;
             font-size: 0.95rem;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: opacity 0.2s;
         }
 
-        .menu-item:hover {
-            background: rgba(229, 9, 20, 0.15);
-            color: #fff;
-            padding-right: 1.2rem;
+        .top-links a:hover {
+            opacity: 0.8;
         }
 
-        .menu-item.badge-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .badge-tag {
-            background: var(--gold);
-            color: #000;
-            font-size: 0.72rem;
-            font-weight: 900;
-            padding: 2px 6px;
-            border-radius: 4px;
-        }
-
-        /* Container & Cards */
-        .container {
-            padding: 1.5rem 2rem;
-            max-width: 1350px;
-            margin: 0 auto;
-        }
-
-        /* Filter Card */
-        .filter-card {
-            background: var(--card-bg);
-            border-radius: 18px;
-            padding: 1.2rem;
-            margin-bottom: 2rem;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-        }
-
-        .filter-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .filter-title {
-            font-size: 1.2rem;
-            font-weight: 900;
-        }
-
-        .reset-btn {
-            background: transparent;
-            color: var(--highlight-color);
-            border: 1px solid var(--highlight-color);
-            padding: 0.3rem 0.9rem;
+        .social-pill {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 4px 14px;
             border-radius: 20px;
-            font-size: 0.82rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .reset-btn:hover {
-            background: var(--highlight-color);
-            color: #000;
-        }
-
-        .filter-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1rem;
-        }
-
-        .select-wrapper {
-            position: relative;
-        }
-
-        .select-wrapper select {
-            width: 100%;
-            background: var(--input-bg);
-            color: var(--text-color);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 0.7rem 1.2rem;
-            padding-left: 2.2rem;
-            border-radius: 25px;
-            outline: none;
-            font-size: 0.9rem;
-            font-weight: bold;
-            cursor: pointer;
-            appearance: none;
-        }
-
-        .select-wrapper::after {
-            content: '❯';
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            position: absolute;
-            left: 1.2rem;
-            top: 50%;
-            transform: translateY(-50%) rotate(90deg);
-            pointer-events: none;
-        }
-
-        .section-title {
-            font-size: 1.4rem;
-            margin-bottom: 1.2rem;
-            border-right: 4px solid var(--accent-color);
-            padding-right: 0.8rem;
-        }
-
-        .movies-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
-            gap: 1.2rem;
-        }
-
-        .movie-card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            overflow: hidden;
-            position: relative;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-        }
-
-        .movie-card:hover {
-            transform: translateY(-7px);
-            box-shadow: 0 10px 22px rgba(229, 9, 20, 0.25);
-        }
-
-        .quality-ribbon {
-            position: absolute;
-            top: 12px;
-            left: -32px;
-            background: var(--accent-color);
+            display: flex;
+            gap: 12px;
             color: #fff;
-            font-size: 0.68rem;
-            font-weight: 900;
-            padding: 4px 32px;
-            transform: rotate(-45deg);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.5);
-            z-index: 5;
-            text-transform: uppercase;
+            font-size: 0.85rem;
         }
 
-        .movie-poster {
+        /* 2. Main Brand & Search Area */
+        .brand-header {
+            background-color: #121620;
+            padding: 1.8rem 1rem;
+            text-align: center;
+            border-bottom: 2px solid #1c2230;
+        }
+
+        .site-logo {
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+            display: inline-block;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+        }
+
+        .site-logo span {
+            color: var(--red-primary);
+        }
+
+        .search-container {
+            max-width: 650px;
+            margin: 0 auto;
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: #090c12;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 30px;
+            overflow: hidden;
+            padding: 3px;
+        }
+
+        .search-container input {
             width: 100%;
-            height: 260px;
+            background: transparent;
+            border: none;
+            padding: 0.7rem 1.2rem;
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .search-container button {
+            background: var(--red-primary);
+            color: #fff;
+            border: none;
+            padding: 0.6rem 1.8rem;
+            border-radius: 25px;
+            font-weight: 900;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .search-container button:hover {
+            background: var(--red-hover);
+        }
+
+        .main-container {
+            max-width: 1380px;
+            margin: 0 auto;
+            padding: 1.5rem 1rem;
+        }
+
+        /* 3. Featured Slider Section */
+        .slider-section {
+            position: relative;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            border-radius: 14px;
+        }
+
+        .slider-container {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding-bottom: 10px;
+        }
+
+        .slider-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .slide-card {
+            min-width: 260px;
+            height: 380px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .slide-card:hover {
+            transform: scale(1.02);
+        }
+
+        .slide-card img {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
         }
 
-        .movie-info {
-            padding: 0.8rem;
+        .badge-ep {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.85);
+            border: 1px solid var(--red-primary);
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 900;
+            padding: 4px 10px;
+            border-radius: 6px;
         }
 
-        .movie-title {
+        .slide-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.95), transparent);
+            padding: 1.2rem 0.8rem 0.8rem;
+            text-align: center;
+        }
+
+        .slide-title {
             font-size: 0.95rem;
-            font-weight: bold;
+            font-weight: 900;
+            color: #fff;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
-        .movie-rating {
+        .slider-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--red-primary);
+            color: #fff;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 10;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            border: none;
+        }
+
+        .arrow-left { left: 10px; }
+        .arrow-right { right: 10px; }
+
+        /* 4. Quick Action Buttons Grid */
+        .quick-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .quick-btn {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0.8rem 1rem;
+            border-radius: 12px;
+            color: #fff;
+            font-weight: 900;
+            font-size: 0.95rem;
             display: flex;
             align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quick-btn:hover {
+            background: var(--red-primary);
+            border-color: var(--red-primary);
+        }
+
+        .quick-btn.active {
+            background: var(--red-primary);
+        }
+
+        /* 5. Filter Dropdowns Card */
+        .filter-box {
+            background: var(--bg-card);
+            border-radius: 14px;
+            padding: 1.2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .filter-select {
+            width: 100%;
+            background: #0d1017;
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 0.7rem 1rem;
+            border-radius: 10px;
+            outline: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .filter-select:focus {
+            border-color: var(--red-primary);
+        }
+
+        /* 6. Content Section & Grid */
+        .section-header-title {
+            font-size: 1.4rem;
+            font-weight: 900;
+            margin-bottom: 1.2rem;
+            border-right: 4px solid var(--red-primary);
+            padding-right: 10px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .content-card {
+            background: var(--bg-card);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .content-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 20px rgba(200, 25, 25, 0.25);
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(0, 0, 0, 0.85);
+            border: 1px solid var(--red-primary);
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 900;
+            padding: 3px 8px;
+            border-radius: 4px;
+            z-index: 5;
+        }
+
+        .poster-img {
+            width: 100%;
+            height: 255px;
+            object-fit: cover;
+        }
+
+        .card-body {
+            padding: 0.8rem;
+        }
+
+        .card-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card-meta {
+            display: flex;
             justify-content: space-between;
-            color: var(--gold);
-            font-size: 0.85rem;
+            align-items: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
             margin-top: 0.4rem;
         }
 
-        .movie-year {
-            color: var(--text-muted);
-            font-size: 0.8rem;
-        }
-
-        .load-more-container {
-            text-align: center;
-            margin-top: 2.5rem;
+        .card-rating {
+            color: var(--gold);
+            font-weight: 900;
         }
 
         .load-more-btn {
-            background: var(--card-bg);
+            display: block;
+            margin: 2.5rem auto;
+            background: var(--bg-card);
             color: #fff;
-            border: 2px solid var(--accent-color);
-            padding: 0.7rem 2.2rem;
+            border: 2px solid var(--red-primary);
+            padding: 0.7rem 3rem;
             border-radius: 25px;
-            font-size: 0.95rem;
-            font-weight: bold;
+            font-size: 1rem;
+            font-weight: 900;
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
         .load-more-btn:hover {
-            background: var(--accent-color);
-            box-shadow: 0 0 15px rgba(229, 9, 20, 0.4);
+            background: var(--red-primary);
+            box-shadow: 0 0 15px rgba(200, 25, 25, 0.4);
         }
 
-        /* Modal Player Window & Rich Details */
+        /* 7. Modal Player Window */
         .modal {
             display: none;
             position: fixed;
@@ -421,7 +407,7 @@
         }
 
         .modal-content {
-            background: var(--card-bg);
+            background: var(--bg-card);
             width: 100%;
             max-width: 900px;
             max-height: 90vh;
@@ -457,7 +443,7 @@
 
         .controls-bar {
             padding: 0.8rem 1.2rem;
-            background: #10141f;
+            background: #0d1017;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -472,9 +458,9 @@
         }
 
         .controls-bar select {
-            background: var(--input-bg);
+            background: var(--bg-card);
             color: #fff;
-            border: 1px solid var(--highlight-color);
+            border: 1px solid var(--red-primary);
             padding: 0.4rem 0.8rem;
             border-radius: 8px;
             outline: none;
@@ -486,7 +472,6 @@
             padding: 1.5rem;
         }
 
-        /* Modal Metadata Styles */
         .meta-pills {
             display: flex;
             flex-wrap: wrap;
@@ -501,14 +486,13 @@
             border-radius: 15px;
             font-size: 0.83rem;
             font-weight: bold;
-            color: var(--highlight-color);
+            color: var(--red-primary);
         }
 
         .meta-row {
             margin-bottom: 0.6rem;
             font-size: 0.92rem;
             color: var(--text-muted);
-            line-height: 1.5;
         }
 
         .meta-row strong {
@@ -519,167 +503,105 @@
         footer {
             text-align: center;
             padding: 2rem;
-            background: #060709;
+            background: #080a0e;
             color: var(--text-muted);
             border-top: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        @media (max-width: 768px) {
-            .nav-tabs { display: none; }
-            .search-box { max-width: 180px; }
+            margin-top: 3rem;
         }
     </style>
 </head>
 <body>
 
-    <!-- Header Bar -->
-    <header>
-        <div class="header-right">
-            <button class="menu-btn" onclick="toggleDrawer()">☰</button>
-            <a class="logo" onclick="resetToHome()">GoodNight 🌙</a>
-        </div>
-
-        <div class="nav-tabs">
-            <button class="tab-btn active" id="latestTab" onclick="filterCategory('latest')">المضاف حديثاً</button>
-            <button class="tab-btn" id="moviesTab" onclick="filterCategory('movie')">أفلام</button>
-            <button class="tab-btn" id="tvTab" onclick="filterCategory('tv')">مسلسلات</button>
-            <button class="tab-btn" id="animeTab" onclick="filterCategory('anime')">أنمي</button>
-        </div>
-
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="ابحث باللغة العربية أو الإنجليزية...">
-        </div>
-    </header>
-
-    <!-- Side Drawer Menu (القائمة الجانبية) -->
-    <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
-    <div class="drawer" id="sideDrawer">
-        <div class="drawer-header">
-            <span class="drawer-title">أقسام الموقع</span>
-            <span class="close-drawer" onclick="toggleDrawer()">&times;</span>
-        </div>
-
-        <!-- Section 1: Latest -->
-        <div class="menu-section">
-            <a class="menu-item" onclick="filterCategory('latest')">المضاف حديثاً (أحدث الإضافات)</a>
-        </div>
-
-        <!-- Section 2: Streaming Networks -->
-        <div class="menu-section">
-            <div class="section-header">منصات العرض العالمية</div>
-            <a class="menu-item" onclick="filterCategory('tv', '', '', '', '213', 'محتوى نتفليكس (Netflix)')">نتفليكس (Netflix)</a>
-            <a class="menu-item" onclick="filterCategory('tv', '', '', '', '49', 'محتوى HBO')">إتش بي أوه (HBO)</a>
-            <a class="menu-item" onclick="filterCategory('tv', '', '', '', '2739', 'محتوى ديزني بلس (Disney+)')">ديزني بلس (Disney+)</a>
-            <a class="menu-item" onclick="filterCategory('tv', '', '', '', '2552', 'محتوى أبل تي في (Apple TV+)')">أبل تي في (Apple TV+)</a>
-            <a class="menu-item" onclick="filterCategory('tv', '', '', '', '4', 'محتوى بي بي سي (BBC)')">بي بي سي (BBC)</a>
-        </div>
-
-        <!-- Section 3: Movies -->
-        <div class="menu-section">
-            <div class="section-header">الأفلام</div>
-            <a class="menu-item" onclick="filterCategory('movie', 'US')">أفلام أجنبية</a>
-            <a class="menu-item" onclick="filterCategory('movie', 'JP', '16')">أفلام أنمي</a>
-            <a class="menu-item" onclick="filterCategory('movie', 'KR,CN,TH')">أفلام آسيوية</a>
-            <a class="menu-item" onclick="filterCategory('movie', 'IN')">أفلام هندية</a>
-            <a class="menu-item" onclick="filterCategory('movie', 'EG,SA,AE,KW')">أفلام عربية</a>
-            <a class="menu-item badge-item" onclick="filterCategory('movie', '', '', 'vote_average.desc')">
-                <span>الأفلام الأعلى تقييماً</span>
-                <span class="badge-tag">IMDb</span>
-            </a>
-        </div>
-
-        <!-- Section 4: TV Series -->
-        <div class="menu-section">
-            <div class="section-header">المسلسلات</div>
-            <a class="menu-item" onclick="filterCategory('tv', 'US,GB')">مسلسلات أجنبية</a>
-            <a class="menu-item" onclick="filterCategory('tv', 'KR,CN')">القسم الآسيوي (كوري / صيني)</a>
-            <a class="menu-item" onclick="filterCategory('tv', 'JP', '16')">مسلسلات الأنمي</a>
-            <a class="menu-item" onclick="filterCategory('tv', 'TR')">مسلسلات تركية</a>
-            <a class="menu-item" onclick="filterCategory('tv', 'EG,SA,AE,KW')">مسلسلات عربية</a>
-            <a class="menu-item badge-item" onclick="filterCategory('tv', '', '', 'vote_average.desc')">
-                <span>المسلسلات الأعلى تقييماً</span>
-                <span class="badge-tag">IMDb</span>
-            </a>
+    <!-- 1. Top Red Bar -->
+    <div class="top-nav">
+        <ul class="top-links">
+            <li><a onclick="resetToHome()">الرئيسية</a></li>
+            <li><a onclick="filterCategory('movie')">أفلام</a></li>
+            <li><a onclick="filterCategory('tv')">مسلسلات</a></li>
+            <li><a onclick="filterCategory('anime')">أنمي</a></li>
+            <li><a onclick="filterCategory('tv', '', '', '', '213', 'محتوى نتفليكس')">نتفليكس</a></li>
+        </ul>
+        <div class="social-pill">
+            <span>GoodNight TV</span>
         </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="container">
+    <!-- 2. Main Brand & Search -->
+    <div class="brand-header">
+        <a class="site-logo" onclick="resetToHome()">Good<span>Night</span></a>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="ابحث عن فيلم أو مسلسل...">
+            <button onclick="performSearch()">بحث</button>
+        </div>
+    </div>
 
-        <!-- Modern Filter Card -->
-        <div class="filter-card">
-            <div class="filter-header">
-                <h3 class="filter-title">التصفية والفلترة</h3>
-                <button class="reset-btn" onclick="resetToHome()">الرئيسية / إعادة ضبط</button>
-            </div>
-            
+    <div class="main-container">
+
+        <!-- 3. Featured Slider (الأحدث والحلقات) -->
+        <div class="slider-section">
+            <button class="slider-arrow arrow-right" onclick="scrollSlider(300)">❯</button>
+            <button class="slider-arrow arrow-left" onclick="scrollSlider(-300)">❮</button>
+            <div class="slider-container" id="sliderContainer"></div>
+        </div>
+
+        <!-- 4. Quick Filter Buttons -->
+        <div class="quick-buttons">
+            <button class="quick-btn active" id="btnLatest" onclick="filterCategory('latest')">🔴 الأحدث</button>
+            <button class="quick-btn" id="btnTop" onclick="filterCategory('movie', '', '', 'vote_average.desc')">⭐ الأعلى تقييماً</button>
+            <button class="quick-btn" id="btnPopular" onclick="filterCategory('movie', '', '', 'popularity.desc')">👁️ الأكثر مشاهدة</button>
+            <button class="quick-btn" id="btnAnime" onclick="filterCategory('anime')">🎌 قسم الأنمي</button>
+        </div>
+
+        <!-- 5. Filter Dropdowns Bar -->
+        <div class="filter-box">
             <div class="filter-grid">
-                <!-- Country -->
-                <div class="select-wrapper">
-                    <select id="countrySelect" onchange="applyFilters(true)">
-                        <option value="">جميع الدول / الأقسام</option>
-                        <option value="US">أجنبي / أمريكي</option>
-                        <option value="KR">كوري</option>
-                        <option value="TR">تركي</option>
-                        <option value="IN">هندي</option>
-                        <option value="JP">ياباني / أنمي</option>
-                        <option value="CN">صيني</option>
-                        <option value="EG,SA,AE,KW">عربي</option>
-                        <option value="GB,FR,ES,DE">أوروبي</option>
-                    </select>
-                </div>
+                <select class="filter-select" id="countrySelect" onchange="applyFilters(true)">
+                    <option value="">كل الأقسام / الدول</option>
+                    <option value="US">أجنبي / أمريكي</option>
+                    <option value="KR">كوري</option>
+                    <option value="TR">تركي</option>
+                    <option value="IN">هندي</option>
+                    <option value="JP">ياباني / أنمي</option>
+                    <option value="EG,SA,AE,KW">عربي</option>
+                </select>
 
-                <!-- Genre -->
-                <div class="select-wrapper">
-                    <select id="genreSelect" onchange="applyFilters(true)">
-                        <option value="">جميع الأنواع والتصنيفات</option>
-                        <option value="28">أكشن</option>
-                        <option value="27">رعب</option>
-                        <option value="35">كوميدي</option>
-                        <option value="18">دراما</option>
-                        <option value="80">جريمة</option>
-                        <option value="878">خيال علمي</option>
-                        <option value="16">أنيميشن</option>
-                        <option value="10749">رومانسي</option>
-                        <option value="9648">غموض</option>
-                        <option value="53">إثارة</option>
-                    </select>
-                </div>
+                <select class="filter-select" id="genreSelect" onchange="applyFilters(true)">
+                    <option value="">كل الأنواع والتصنيفات</option>
+                    <option value="28">أكشن</option>
+                    <option value="27">رعب</option>
+                    <option value="35">كوميدي</option>
+                    <option value="18">دراما</option>
+                    <option value="80">جريمة</option>
+                    <option value="878">خيال علمي</option>
+                    <option value="16">أنيميشن</option>
+                    <option value="10749">رومانسي</option>
+                </select>
 
-                <!-- Year -->
-                <div class="select-wrapper">
-                    <select id="yearSelect" onchange="applyFilters(true)">
-                        <option value="">جميع السنوات</option>
-                        <option value="2026">2026</option>
-                        <option value="2025">2025</option>
-                        <option value="2024">2024</option>
-                        <option value="2023">2023</option>
-                        <option value="2022">2022</option>
-                        <option value="2021">2021</option>
-                        <option value="2020">2020</option>
-                    </select>
-                </div>
+                <select class="filter-select" id="yearSelect" onchange="applyFilters(true)">
+                    <option value="">كل السنوات</option>
+                    <option value="2026">2026</option>
+                    <option value="2025">2025</option>
+                    <option value="2024">2024</option>
+                    <option value="2023">2023</option>
+                    <option value="2022">2022</option>
+                </select>
 
-                <!-- Sort -->
-                <div class="select-wrapper">
-                    <select id="sortSelect" onchange="applyFilters(true)">
-                        <option value="primary_release_date.desc">المضاف حديثاً</option>
-                        <option value="popularity.desc">الأكثر شعبية</option>
-                        <option value="vote_average.desc">الأعلى تقييماً</option>
-                    </select>
-                </div>
+                <select class="filter-select" id="sortSelect" onchange="applyFilters(true)">
+                    <option value="primary_release_date.desc">المضاف حديثاً</option>
+                    <option value="popularity.desc">الأكثر شعبية</option>
+                    <option value="vote_average.desc">الأعلى تقييماً</option>
+                </select>
             </div>
         </div>
 
-        <h2 class="section-title" id="gridTitle">المضاف حديثاً</h2>
-        <div class="movies-grid" id="moviesGrid"></div>
-        
-        <div class="load-more-container" id="loadMoreContainer">
-            <button class="load-more-btn" id="loadMoreBtn" onclick="loadNextPage()">تحميل المزيد</button>
-        </div>
+        <!-- 6. Content Grid -->
+        <h2 class="section-header-title" id="gridTitle">المضاف حديثاً</h2>
+        <div class="content-grid" id="moviesGrid"></div>
+
+        <button class="load-more-btn" id="loadMoreBtn" onclick="loadNextPage()">تحميل المزيد 🔄</button>
     </div>
 
-    <!-- Modal Player Window -->
+    <!-- 7. Modal Player Window -->
     <div class="modal" id="movieModal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
@@ -711,9 +633,8 @@
                 </div>
             </div>
 
-            <!-- Enhanced Details Container -->
             <div class="modal-details">
-                <h2 id="modalTitle" style="color: var(--highlight-color); font-size: 1.5rem;"></h2>
+                <h2 id="modalTitle" style="color: var(--red-primary); font-size: 1.5rem;"></h2>
                 <div id="modalMeta"></div>
                 <p id="modalOverview" style="margin-top: 0.8rem; color: var(--text-muted); line-height: 1.7;"></p>
             </div>
@@ -737,6 +658,7 @@
         let currentSearchQuery = '';
 
         const moviesGrid = document.getElementById('moviesGrid');
+        const sliderContainer = document.getElementById('sliderContainer');
         const searchInput = document.getElementById('searchInput');
         const movieModal = document.getElementById('movieModal');
         const videoPlayer = document.getElementById('videoPlayer');
@@ -752,18 +674,49 @@
         const genreSelect = document.getElementById('genreSelect');
         const yearSelect = document.getElementById('yearSelect');
         const sortSelect = document.getElementById('sortSelect');
-        const loadMoreContainer = document.getElementById('loadMoreContainer');
-        const sideDrawer = document.getElementById('sideDrawer');
-        const drawerOverlay = document.getElementById('drawerOverlay');
+        const loadMoreBtn = document.getElementById('loadMoreBtn');
 
-        function toggleDrawer() {
-            sideDrawer.classList.toggle('active');
-            drawerOverlay.classList.toggle('active');
+        function scrollSlider(amount) {
+            sliderContainer.scrollBy({ left: amount, behavior: 'smooth' });
+        }
+
+        async function loadSliderItems() {
+            try {
+                const res = await fetch(`${BASE_URL}/trending/all/week?api_key=${API_KEY}&language=ar-SA`);
+                const data = await res.json();
+                sliderContainer.innerHTML = '';
+                
+                data.results.slice(0, 10).forEach(item => {
+                    if (!item.poster_path) return;
+                    const title = item.title || item.name;
+                    const mediaType = item.media_type || 'movie';
+                    
+                    const slide = document.createElement('div');
+                    slide.className = 'slide-card';
+                    slide.innerHTML = `
+                        <div class="badge-ep">${mediaType === 'tv' ? 'مسلسل' : 'فيلم'}</div>
+                        <img src="${IMG_URL + item.poster_path}" alt="${title}">
+                        <div class="slide-info">
+                            <div class="slide-title">${title}</div>
+                        </div>
+                    `;
+                    slide.onclick = () => {
+                        currentType = mediaType;
+                        openPlayer(item);
+                    };
+                    sliderContainer.appendChild(slide);
+                });
+            } catch (e) {
+                console.error('Slider load error:', e);
+            }
         }
 
         function filterCategory(type, country = '', genre = '', sort = '', network = '', customTitle = '') {
             currentNetwork = network;
-            if (sideDrawer.classList.contains('active')) toggleDrawer();
+
+            // Update Active Quick Buttons
+            document.querySelectorAll('.quick-btn').forEach(btn => btn.classList.remove('active'));
+            if (type === 'latest') document.getElementById('btnLatest').classList.add('active');
 
             if (customTitle) {
                 currentType = type;
@@ -827,10 +780,7 @@
                 url += `&vote_count.gte=20`;
             }
 
-            if (currentNetwork) {
-                url += `&with_networks=${currentNetwork}`;
-            }
-
+            if (currentNetwork) url += `&with_networks=${currentNetwork}`;
             if (country) url += `&with_origin_country=${country}`;
             if (genre) url += `&with_genres=${genre}`;
             if (year) {
@@ -842,20 +792,20 @@
                 const res = await fetch(url);
                 const data = await res.json();
                 displayItems(data.results, reset);
-                toggleLoadMore(data.page < data.total_pages);
+                loadMoreBtn.style.display = data.page < data.total_pages ? 'block' : 'none';
             } catch (err) {
                 console.error('Error applying filters:', err);
             }
         }
 
+        function performSearch() {
+            const query = searchInput.value.trim();
+            if (query) searchItems(query, true);
+        }
+
         async function searchItems(query, reset = true) {
             isSearching = true;
             currentSearchQuery = query;
-
-            if (!query) {
-                applyFilters(true);
-                return;
-            }
 
             if (reset) {
                 currentPage = 1;
@@ -867,7 +817,7 @@
                 const res = await fetch(`${BASE_URL}/search/${currentType}?api_key=${API_KEY}&language=ar-SA&query=${encodeURIComponent(query)}&page=${currentPage}&include_adult=false`);
                 const data = await res.json();
                 displayItems(data.results, reset);
-                toggleLoadMore(data.page < data.total_pages);
+                loadMoreBtn.style.display = data.page < data.total_pages ? 'block' : 'none';
             } catch (err) {
                 console.error('Error searching:', err);
             }
@@ -882,10 +832,6 @@
             }
         }
 
-        function toggleLoadMore(hasMore) {
-            loadMoreContainer.style.display = hasMore ? 'block' : 'none';
-        }
-
         function displayItems(items, reset = true) {
             if (reset && (!items || items.length === 0)) {
                 moviesGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 2rem;">لا توجد نتائج تطابق الخيارات المختارة.</p>';
@@ -898,15 +844,15 @@
                 const releaseYear = (item.release_date || item.first_air_date || '').substring(0, 4);
 
                 const card = document.createElement('div');
-                card.className = 'movie-card';
+                card.className = 'content-card';
                 card.innerHTML = `
-                    <div class="quality-ribbon">WEB-DL</div>
-                    <img class="movie-poster" src="${IMG_URL + item.poster_path}" alt="${title}">
-                    <div class="movie-info">
-                        <div class="movie-title">${title}</div>
-                        <div class="movie-rating">
-                            <span>★ ${item.vote_average ? item.vote_average.toFixed(1) : 'N/A'}</span>
-                            <span class="movie-year">${releaseYear}</span>
+                    <div class="card-badge">${currentType === 'tv' ? 'حلقة' : 'HD'}</div>
+                    <img class="poster-img" src="${IMG_URL + item.poster_path}" alt="${title}">
+                    <div class="card-body">
+                        <div class="card-title">${title}</div>
+                        <div class="card-meta">
+                            <span class="card-rating">★ ${item.vote_average ? item.vote_average.toFixed(1) : 'N/A'}</span>
+                            <span>${releaseYear}</span>
                         </div>
                     </div>
                 `;
@@ -919,10 +865,9 @@
             currentItem = item;
             modalTitle.innerText = item.title || item.name;
             modalOverview.innerText = item.overview || "لا يوجد وصف متاح حالياً لهذا العمل.";
-            modalMeta.innerHTML = '<p style="color: var(--text-muted); font-size: 0.85rem;">جاري تحميل التفاصيل الكاملة...</p>';
+            modalMeta.innerHTML = '<p style="color: var(--text-muted); font-size: 0.85rem;">جاري تحميل التفاصيل...</p>';
             serverSelect.value = "vidlink";
 
-            // جلب كامل معلومات العمل مع طاقم الممثلين
             fetchFullDetails(item.id, currentType);
 
             if (currentType === 'tv') {
@@ -943,56 +888,25 @@
                 const releaseDate = data.release_date || data.first_air_date || 'غير محدد';
                 const year = releaseDate.substring(0, 4);
                 
-                // بلدان الإنتاج
                 let countries = 'غير محدد';
                 if (data.production_countries && data.production_countries.length > 0) {
                     countries = data.production_countries.map(c => c.name).join('، ');
-                } else if (data.origin_country && data.origin_country.length > 0) {
-                    countries = data.origin_country.join('، ');
                 }
 
-                // التصنيفات
                 const genres = data.genres ? data.genres.map(g => g.name).join('، ') : 'غير محدد';
+                let cast = data.credits && data.credits.cast ? data.credits.cast.slice(0, 6).map(c => c.name).join('، ') : 'غير متوفر';
 
-                // مدة العمل / عدد المواسم
-                let duration = '';
-                if (data.runtime) {
-                    duration = `${data.runtime} دقيقة`;
-                } else if (data.number_of_seasons) {
-                    duration = `${data.number_of_seasons} مواسم (${data.number_of_episodes || ''} حلقة)`;
-                }
-
-                // طاقم الممثلين (أول 6 ممثلين)
-                let cast = 'غير متوفر';
-                if (data.credits && data.credits.cast && data.credits.cast.length > 0) {
-                    cast = data.credits.cast.slice(0, 6).map(c => c.name).join('، ');
-                }
-
-                // المخرج / صانع العمل
-                let director = '';
-                if (type === 'movie' && data.credits && data.credits.crew) {
-                    const dirObj = data.credits.crew.filter(c => c.job === 'Director');
-                    if (dirObj.length > 0) director = dirObj.map(d => d.name).join('، ');
-                } else if (data.created_by && data.created_by.length > 0) {
-                    director = data.created_by.map(c => c.name).join('، ');
-                }
-
-                // بناء HTML التفاصيل
                 modalMeta.innerHTML = `
                     <div class="meta-pills">
-                        <span class="meta-pill">📅 سنة الإنتاج: ${year}</span>
-                        ${duration ? `<span class="meta-pill">⏱️ المدة: ${duration}</span>` : ''}
+                        <span class="meta-pill">📅 الإنتاج: ${year}</span>
                         <span class="meta-pill">⭐ التقييم: ${data.vote_average ? data.vote_average.toFixed(1) : 'N/A'}</span>
                     </div>
-
                     <div class="meta-row"><strong>بلد الإنتاج:</strong> ${countries}</div>
                     <div class="meta-row"><strong>التصنيف:</strong> ${genres}</div>
-                    ${director ? `<div class="meta-row"><strong>المخرج / الصانع:</strong> ${director}</div>` : ''}
                     <div class="meta-row"><strong>طاقم التمثيل:</strong> ${cast}</div>
                 `;
             } catch (err) {
                 console.error('Error fetching details:', err);
-                modalMeta.innerHTML = '';
             }
         }
 
@@ -1087,14 +1001,12 @@
             }
         }
 
-        let timer;
-        searchInput.addEventListener('input', (e) => {
-            clearTimeout(timer);
-            timer = setTimeout(() => {
-                searchItems(e.target.value.trim(), true);
-            }, 500);
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') performSearch();
         });
 
+        // Initialize
+        loadSliderItems();
         filterCategory('latest');
     </script>
 </body>
