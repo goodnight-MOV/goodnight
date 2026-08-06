@@ -328,6 +328,66 @@
             padding: 1.5rem 1rem;
         }
 
+        /* App Install Top Notice Banner (الشريط العلوي البارز) */
+        .app-install-banner {
+            background: linear-gradient(90deg, #181c26 0%, #1e293b 100%);
+            border: 1px solid rgba(245, 197, 24, 0.3);
+            border-radius: 12px;
+            padding: 0.8rem 1.2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .app-install-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .app-icon-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--red-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .app-install-text strong {
+            display: block;
+            color: #fff;
+            font-size: 0.95rem;
+        }
+
+        .app-install-text span {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .app-install-btn {
+            background: var(--gold);
+            color: #000;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 20px;
+            font-weight: 900;
+            font-size: 0.85rem;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: transform 0.2s;
+        }
+
+        .app-install-btn:hover {
+            transform: scale(1.05);
+        }
+
         /* Continue Watching Widget */
         .continue-widget {
             display: none;
@@ -919,6 +979,13 @@
                 flex-direction: column;
                 text-align: center;
             }
+            .app-install-banner {
+                flex-direction: column;
+                text-align: center;
+            }
+            .app-install-info {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -1010,6 +1077,18 @@
     </div>
 
     <div class="main-container">
+
+        <!-- App Install Professional Banner (شريط التثبيت البارز المرتجع) -->
+        <div class="app-install-banner" id="appInstallBanner">
+            <div class="app-install-info">
+                <div class="app-icon-img">🌙</div>
+                <div class="app-install-text">
+                    <strong>شاهد عبر تطبيق GoodNight الجوال المباشر</strong>
+                    <span>تصفح أسرع، مشاهدة ملء الشاشة، وبدون الحاجة لفتح المتصفح في كل مرة.</span>
+                </div>
+            </div>
+            <button class="app-install-btn" onclick="triggerAppInstall()">📱 تثبيت التطبيق مجاناً</button>
+        </div>
 
         <!-- Continue Watching Widget -->
         <div class="continue-widget" id="continueWidget">
