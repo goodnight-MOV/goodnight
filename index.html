@@ -488,6 +488,11 @@
 
             let url = `${BASE_URL}/discover/${currentType}?api_key=${API_KEY}&language=ar-SA&include_adult=false&sort_by=${sort}&page=${currentPage}`;
             
+            // تصفية الأعمال المجهولة واشتراط حد أدنى 150 صوت لضمان جودة وتوفر المحتوى
+            if (sort === 'vote_average.desc') {
+                url += `&vote_count.gte=150`;
+            }
+
             if (country) url += `&with_origin_country=${country}`;
             if (genre) url += `&with_genres=${genre}`;
             if (year) {
