@@ -186,6 +186,30 @@
             margin-top: 0.4rem;
         }
 
+        /* Load More Button Container */
+        .load-more-container {
+            text-align: center;
+            margin-top: 2.5rem;
+        }
+
+        .load-more-btn {
+            background: var(--card-bg);
+            color: var(--accent-color);
+            border: 2px solid var(--accent-color);
+            padding: 0.8rem 2.5rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .load-more-btn:hover {
+            background: var(--accent-color);
+            color: #000;
+            box-shadow: 0 0 15px rgba(102, 252, 241, 0.4);
+        }
+
         /* Modal Player */
         .modal {
             display: none;
@@ -279,10 +303,9 @@
 
     <!-- Filter Section -->
     <div class="filter-section">
-        <!-- Country Filter -->
         <div class="filter-group">
             <label>بلد الإنتاج:</label>
-            <select id="countrySelect" onchange="applyFilters()">
+            <select id="countrySelect" onchange="applyFilters(true)">
                 <option value="">جميع الدول</option>
                 <option value="US">أجنبي / أمريكي 🇺🇸</option>
                 <option value="KR">كوري 🇰🇷</option>
@@ -295,10 +318,9 @@
             </select>
         </div>
 
-        <!-- Genre Filter -->
         <div class="filter-group">
             <label>التصنيف:</label>
-            <select id="genreSelect" onchange="applyFilters()">
+            <select id="genreSelect" onchange="applyFilters(true)">
                 <option value="">جميع التصنيفات</option>
                 <option value="28">أكشن</option>
                 <option value="27">رعب</option>
@@ -313,10 +335,9 @@
             </select>
         </div>
 
-        <!-- Year Filter -->
         <div class="filter-group">
             <label>سنة الإنتاج:</label>
-            <select id="yearSelect" onchange="applyFilters()">
+            <select id="yearSelect" onchange="applyFilters(true)">
                 <option value="">جميع السنوات</option>
                 <option value="2026">2026</option>
                 <option value="2025">2025</option>
@@ -330,10 +351,9 @@
             </select>
         </div>
 
-        <!-- Sort Filter -->
         <div class="filter-group">
             <label>الترتيب حسب:</label>
-            <select id="sortSelect" onchange="applyFilters()">
+            <select id="sortSelect" onchange="applyFilters(true)">
                 <option value="popularity.desc">الأكثر شعبية 🔥</option>
                 <option value="vote_average.desc">الأعلى تقييماً ⭐</option>
                 <option value="primary_release_date.desc">الأحدث إصداراً 🆕</option>
@@ -344,6 +364,10 @@
     <div class="container">
         <h2 class="section-title" id="gridTitle">الأفلام المعروضة 🔥</h2>
         <div class="movies-grid" id="moviesGrid"></div>
+        
+        <div class="load-more-container" id="loadMoreContainer">
+            <button class="load-more-btn" id="loadMoreBtn" onclick="loadNextPage()">تحميل المزيد 🔄</button>
+        </div>
     </div>
 
     <!-- Modal Player Window -->
@@ -395,6 +419,9 @@
 
         let currentType = 'movie'; 
         let currentItem = null;
+        let currentPage = 1;
+        let isSearching = false;
+        let currentSearchQuery = '';
 
         const moviesGrid = document.getElementById('moviesGrid');
         const searchInput = document.getElementById('searchInput');
@@ -413,6 +440,7 @@
         const genreSelect = document.getElementById('genreSelect');
         const yearSelect = document.getElementById('yearSelect');
         const sortSelect = document.getElementById('sortSelect');
+        const loadMoreContainer = document.getElementById('loadMoreContainer');
 
         function switchType(type) {
             currentType = type;
@@ -431,16 +459,22 @@
                 moviesTab.classList.remove('active');
                 gridTitle.innerText = "المسلسلات المعروضة 🔥";
             }
-            applyFilters();
+            applyFilters(true);
         }
 
-        async function applyFilters() {
+        async function applyFilters(reset = true) {
+            isSearching = false;
+            if (reset) {
+                currentPage = 1;
+                moviesGrid.innerHTML = '';
+            }
+
             const country = countrySelect.value;
             const genre = genreSelect.value;
             const year = yearSelect.value;
             const sort = sortSelect.value;
 
-            let url = `${BASE_URL}/discover/${currentType}?api_key=${API_KEY}&language=ar-SA&include_adult=false&sort_by=${sort}`;
+            let url = `${BASE_URL}/discover/${currentType}?api_key=${API_KEY}&language=ar-SA&include_adult=false&sort_by=${sort}&page=${currentPage}`;
             
             if (country) url += `&with_origin_country=${country}`;
             if (genre) url += `&with_genres=${genre}`;
@@ -452,33 +486,57 @@
             try {
                 const res = await fetch(url);
                 const data = await res.json();
-                displayItems(data.results);
+                displayItems(data.results, reset);
+                toggleLoadMore(data.page < data.total_pages);
             } catch (err) {
                 console.error('Error applying filters:', err);
             }
         }
 
-        async function searchItems(query) {
+        async function searchItems(query, reset = true) {
+            isSearching = true;
+            currentSearchQuery = query;
+
             if (!query) {
-                applyFilters();
+                applyFilters(true);
                 return;
             }
+
+            if (reset) {
+                currentPage = 1;
+                moviesGrid.innerHTML = '';
+            }
+
             gridTitle.innerText = `نتائج البحث عن: ${query}`;
             try {
-                const res = await fetch(`${BASE_URL}/search/${currentType}?api_key=${API_KEY}&language=ar-SA&query=${encodeURIComponent(query)}&include_adult=false`);
+                const res = await fetch(`${BASE_URL}/search/${currentType}?api_key=${API_KEY}&language=ar-SA&query=${encodeURIComponent(query)}&page=${currentPage}&include_adult=false`);
                 const data = await res.json();
-                displayItems(data.results);
+                displayItems(data.results, reset);
+                toggleLoadMore(data.page < data.total_pages);
             } catch (err) {
                 console.error('Error searching:', err);
             }
         }
 
-        function displayItems(items) {
-            moviesGrid.innerHTML = '';
-            if (!items || items.length === 0) {
-                moviesGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 2rem;">لا توجد نتائج تطابق التصنيفات المختارة.</p>';
+        function loadNextPage() {
+            currentPage++;
+            if (isSearching) {
+                searchItems(currentSearchQuery, false);
+            } else {
+                applyFilters(false);
+            }
+        }
+
+        function toggleLoadMore(hasMore) {
+            loadMoreContainer.style.display = hasMore ? 'block' : 'none';
+        }
+
+        function displayItems(items, reset = true) {
+            if (reset && (!items || items.length === 0)) {
+                moviesGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 2rem;">لا توجد نتائج تطابق الخيارات المختارة.</p>';
                 return;
             }
+
             items.forEach(item => {
                 if (!item.poster_path) return;
                 const title = item.title || item.name;
@@ -607,11 +665,11 @@
         searchInput.addEventListener('input', (e) => {
             clearTimeout(timer);
             timer = setTimeout(() => {
-                searchItems(e.target.value.trim());
+                searchItems(e.target.value.trim(), true);
             }, 500);
         });
 
-        applyFilters();
+        applyFilters(true);
     </script>
 </body>
 </html>
