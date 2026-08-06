@@ -44,6 +44,7 @@
 
         .top-links {
             display: flex;
+            align-items: center;
             gap: 18px;
             list-style: none;
         }
@@ -59,6 +60,43 @@
 
         .top-links a:hover {
             opacity: 0.8;
+        }
+
+        /* Streaming Platforms Dropdown Menu */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: #121620;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            list-style: none;
+            padding: 8px 0;
+            min-width: 180px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+            z-index: 100;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-menu li a {
+            display: block;
+            padding: 8px 16px;
+            font-size: 0.88rem;
+            color: #fff;
+            white-space: nowrap;
+        }
+
+        .dropdown-menu li a:hover {
+            background-color: var(--red-primary);
+            opacity: 1;
         }
 
         .social-pill {
@@ -468,7 +506,6 @@
             font-weight: bold;
         }
 
-        /* Episode Navigation Buttons */
         .nav-ep-btn {
             background: var(--red-primary);
             color: #fff;
@@ -539,14 +576,23 @@
 </head>
 <body>
 
-    <!-- 1. Top Red Bar -->
+    <!-- 1. Top Red Bar with Platforms Dropdown -->
     <div class="top-nav">
         <ul class="top-links">
             <li><a onclick="resetToHome()">الرئيسية</a></li>
             <li><a onclick="filterCategory('movie')">أفلام</a></li>
             <li><a onclick="filterCategory('tv')">مسلسلات</a></li>
             <li><a onclick="filterCategory('anime')">أنمي</a></li>
-            <li><a onclick="filterCategory('tv', '', '', '', '213', 'محتوى نتفليكس')">نتفليكس</a></li>
+            <li class="dropdown">
+                <a>منصات العرض ▾</a>
+                <ul class="dropdown-menu">
+                    <li><a onclick="filterCategory('tv', '', '', '', '213', 'محتوى نتفليكس (Netflix)')">نتفليكس (Netflix)</a></li>
+                    <li><a onclick="filterCategory('tv', '', '', '', '49', 'محتوى HBO')">إتش بي أوه (HBO)</a></li>
+                    <li><a onclick="filterCategory('tv', '', '', '', '2739', 'محتوى ديزني بلس')">ديزني بلس (Disney+)</a></li>
+                    <li><a onclick="filterCategory('tv', '', '', '', '2552', 'محتوى أبل تي في')">أبل تي في (Apple TV+)</a></li>
+                    <li><a onclick="filterCategory('tv', '', '', '', '4', 'محتوى بي بي سي')">بي بي سي (BBC)</a></li>
+                </ul>
+            </li>
         </ul>
         <div class="social-pill">
             <span>GoodNight TV</span>
@@ -648,7 +694,6 @@
                     </select>
                 </div>
 
-                <!-- TV Controls with Next / Prev buttons -->
                 <div id="tvControls" style="display: none; align-items: center; gap: 8px;">
                     <button class="nav-ep-btn" onclick="changeEpisode(-1)">⬅ الحلقة السابقة</button>
 
@@ -1004,7 +1049,6 @@
             updatePlayerSrc();
         }
 
-        // Navigation between episodes function
         async function changeEpisode(direction) {
             if (!currentItem || currentType !== 'tv') return;
 
@@ -1016,7 +1060,6 @@
                 episodeSelect.selectedIndex = newEpIndex;
                 updatePlayerSrc();
             } else if (direction === 1) {
-                // Next Season
                 const currentSeasonIndex = seasonSelect.selectedIndex;
                 if (currentSeasonIndex < seasonSelect.options.length - 1) {
                     seasonSelect.selectedIndex = currentSeasonIndex + 1;
@@ -1025,7 +1068,6 @@
                     updatePlayerSrc();
                 }
             } else if (direction === -1) {
-                // Previous Season
                 const currentSeasonIndex = seasonSelect.selectedIndex;
                 if (currentSeasonIndex > 0) {
                     seasonSelect.selectedIndex = currentSeasonIndex - 1;
