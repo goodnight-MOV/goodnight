@@ -170,6 +170,23 @@
             z-index: 10;
         }
 
+        .server-bar {
+            padding: 0.8rem 1.5rem;
+            background: #151c24;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .server-bar select {
+            background: var(--card-bg);
+            color: #fff;
+            border: 1px solid var(--accent-color);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            outline: none;
+        }
+
         .player-container {
             position: relative;
             padding-bottom: 56.25%;
@@ -222,8 +239,17 @@
     <div class="modal" id="movieModal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
+            <div class="server-bar">
+                <label for="serverSelect" style="font-size: 0.9rem; color: var(--text-muted);">اختر سيرفر المشاهدة:</label>
+                <select id="serverSelect" onchange="changeServer()">
+                    <option value="vidlink">سيرفر 1 (آمن وبدون إعلانات)</option>
+                    <option value="embedsu">سيرفر 2 (سريع)</option>
+                    <option value="autoembed">سيرفر 3 (بديل)</option>
+                </select>
+            </div>
             <div class="player-container">
-                <iframe id="videoPlayer" src="" allowfullscreen></iframe>
+                <!-- إضافة الحماية لمنع أي نوافذ منبثقة sandbox -->
+                <iframe id="videoPlayer" src="" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"></iframe>
             </div>
             <div class="modal-details">
                 <h2 id="modalTitle" style="color: var(--accent-color);"></h2>
@@ -241,6 +267,8 @@
         const BASE_URL = 'https://api.themoviedb.org/3';
         const IMG_URL = 'https://image.tmdb.org/t/p/w500';
 
+        let currentMovieId = null;
+
         const moviesGrid = document.getElementById('moviesGrid');
         const searchInput = document.getElementById('searchInput');
         const movieModal = document.getElementById('movieModal');
@@ -248,10 +276,11 @@
         const modalTitle = document.getElementById('modalTitle');
         const modalOverview = document.getElementById('modalOverview');
         const gridTitle = document.getElementById('gridTitle');
+        const serverSelect = document.getElementById('serverSelect');
 
         async function fetchTrendingMovies() {
             try {
-                const res = await fetch(`${BASE_URL}/trending/movie/week?api_key=${API_KEY}&language=ar-SA`);
+                const res = await fetch(`${BASE_URL}/trending/movie/week?api_key=${API_KEY}&language=ar-SA&include_adult=false`);
                 const data = await res.json();
                 displayMovies(data.results);
             } catch (err) {
@@ -267,7 +296,7 @@
             }
             gridTitle.innerText = `نتائج البحث عن: ${query}`;
             try {
-                const res = await fetch(`${BASE_URL}/search/movie?api_key=${API_KEY}&language=ar-SA&query=${encodeURIComponent(query)}`);
+                const res = await fetch(`${BASE_URL}/search/movie?api_key=${API_KEY}&language=ar-SA&query=${encodeURIComponent(query)}&include_adult=false`);
                 const data = await res.json();
                 displayMovies(data.results);
             } catch (err) {
@@ -294,12 +323,29 @@
         }
 
         function openPlayer(movie) {
+            currentMovieId = movie.id;
             modalTitle.innerText = movie.title;
             modalOverview.innerText = movie.overview || "لا يوجد وصف متاح لهذا الفيلم حالياً.";
             
-            // رابط المشغل المباشر
-            videoPlayer.src = `https://vidsrc.to/embed/movie/${movie.id}`;
+            serverSelect.value = "vidlink";
+            loadVideoSrc(currentMovieId, "vidlink");
             movieModal.style.display = 'flex';
+        }
+
+        function loadVideoSrc(movieId, server) {
+            if (server === 'vidlink') {
+                videoPlayer.src = `https://vidlink.pro/movie/${movieId}`;
+            } else if (server === 'embedsu') {
+                videoPlayer.src = `https://embed.su/embed/movie/${movieId}`;
+            } else if (server === 'autoembed') {
+                videoPlayer.src = `https://player.autoembed.cc/embed/movie/${movieId}`;
+            }
+        }
+
+        function changeServer() {
+            if (currentMovieId) {
+                loadVideoSrc(currentMovieId, serverSelect.value);
+            }
         }
 
         function closeModal() {
@@ -307,7 +353,6 @@
             videoPlayer.src = '';
         }
 
-        // إغلاق الشاشة المنبثقة عند الضغط خارجها
         window.onclick = function(event) {
             if (event.target === movieModal) {
                 closeModal();
