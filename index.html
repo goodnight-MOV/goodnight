@@ -186,31 +186,7 @@
             margin-top: 0.4rem;
         }
 
-        /* Load More Button Container */
-        .load-more-container {
-            text-align: center;
-            margin-top: 2.5rem;
-        }
-
-        .load-more-btn {
-            background: var(--card-bg);
-            color: var(--accent-color);
-            border: 2px solid var(--accent-color);
-            padding: 0.8rem 2.5rem;
-            border-radius: 25px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .load-more-btn:hover {
-            background: var(--accent-color);
-            color: #000;
-            box-shadow: 0 0 15px rgba(102, 252, 241, 0.4);
-        }
-
-        /* Modal Player Window */
+        /* Modal Player */
         .modal {
             display: none;
             position: fixed;
@@ -240,7 +216,25 @@
             color: #fff;
             cursor: pointer;
             z-index: 10;
-            text-shadow: 0 0 5px #000;
+        }
+
+        .controls-bar {
+            padding: 0.8rem 1.5rem;
+            background: #151c24;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .controls-bar select {
+            background: var(--card-bg);
+            color: #fff;
+            border: 1px solid var(--accent-color);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            outline: none;
+            cursor: pointer;
         }
 
         .player-container {
@@ -255,36 +249,6 @@
             top: 0; left: 0;
             width: 100%; height: 100%;
             border: none;
-        }
-
-        /* Controls bar located below the player */
-        .controls-bar {
-            padding: 1rem 1.5rem;
-            background: #131921;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .control-group {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .controls-bar select {
-            background: var(--card-bg);
-            color: #fff;
-            border: 1px solid var(--accent-color);
-            padding: 0.4rem 0.8rem;
-            border-radius: 6px;
-            outline: none;
-            cursor: pointer;
-            font-weight: bold;
         }
 
         .modal-details {
@@ -315,9 +279,10 @@
 
     <!-- Filter Section -->
     <div class="filter-section">
+        <!-- Country Filter -->
         <div class="filter-group">
             <label>بلد الإنتاج:</label>
-            <select id="countrySelect" onchange="applyFilters(true)">
+            <select id="countrySelect" onchange="applyFilters()">
                 <option value="">جميع الدول</option>
                 <option value="US">أجنبي / أمريكي 🇺🇸</option>
                 <option value="KR">كوري 🇰🇷</option>
@@ -325,14 +290,15 @@
                 <option value="IN">هندي 🇮🇳</option>
                 <option value="JP">ياباني 🇯🇵</option>
                 <option value="CN">صيني 🇨🇳</option>
-                <option value="EG,SA,AE,KW">عربي 🇸🇦🇪غت</option>
+                <option value="EG,SA,AE,KW">عربي 🇸🇦🇪🇬</option>
                 <option value="GB,FR,ES,DE">أوروبي 🇪🇺</option>
             </select>
         </div>
 
+        <!-- Genre Filter -->
         <div class="filter-group">
             <label>التصنيف:</label>
-            <select id="genreSelect" onchange="applyFilters(true)">
+            <select id="genreSelect" onchange="applyFilters()">
                 <option value="">جميع التصنيفات</option>
                 <option value="28">أكشن</option>
                 <option value="27">رعب</option>
@@ -347,9 +313,10 @@
             </select>
         </div>
 
+        <!-- Year Filter -->
         <div class="filter-group">
             <label>سنة الإنتاج:</label>
-            <select id="yearSelect" onchange="applyFilters(true)">
+            <select id="yearSelect" onchange="applyFilters()">
                 <option value="">جميع السنوات</option>
                 <option value="2026">2026</option>
                 <option value="2025">2025</option>
@@ -363,9 +330,10 @@
             </select>
         </div>
 
+        <!-- Sort Filter -->
         <div class="filter-group">
             <label>الترتيب حسب:</label>
-            <select id="sortSelect" onchange="applyFilters(true)">
+            <select id="sortSelect" onchange="applyFilters()">
                 <option value="popularity.desc">الأكثر شعبية 🔥</option>
                 <option value="vote_average.desc">الأعلى تقييماً ⭐</option>
                 <option value="primary_release_date.desc">الأحدث إصداراً 🆕</option>
@@ -376,25 +344,14 @@
     <div class="container">
         <h2 class="section-title" id="gridTitle">الأفلام المعروضة 🔥</h2>
         <div class="movies-grid" id="moviesGrid"></div>
-        
-        <div class="load-more-container" id="loadMoreContainer">
-            <button class="load-more-btn" id="loadMoreBtn" onclick="loadNextPage()">تحميل المزيد 🔄</button>
-        </div>
     </div>
 
     <!-- Modal Player Window -->
     <div class="modal" id="movieModal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
-            
-            <!-- 1. Frame Player at the top -->
-            <div class="player-container">
-                <iframe id="videoPlayer" src="" allowfullscreen></iframe>
-            </div>
-
-            <!-- 2. Controls and Server bar below player -->
             <div class="controls-bar">
-                <div class="control-group">
+                <div>
                     <label style="font-size: 0.85rem; color: var(--text-muted);">السيرفر:</label>
                     <select id="serverSelect" onchange="updatePlayerSrc()">
                         <option value="vidlink">سيرفر 1 (VidLink)</option>
@@ -405,18 +362,21 @@
                 </div>
 
                 <div id="tvControls" style="display: none; gap: 10px;">
-                    <div class="control-group">
+                    <div>
                         <label style="font-size: 0.85rem; color: var(--text-muted);">الموسم:</label>
                         <select id="seasonSelect" onchange="onSeasonChange()"></select>
                     </div>
-                    <div class="control-group">
+                    <div>
                         <label style="font-size: 0.85rem; color: var(--text-muted);">الحلقة:</label>
                         <select id="episodeSelect" onchange="updatePlayerSrc()"></select>
                     </div>
                 </div>
             </div>
 
-            <!-- 3. Details and Description at the bottom -->
+            <div class="player-container">
+                <iframe id="videoPlayer" src="" allowfullscreen></iframe>
+            </div>
+
             <div class="modal-details">
                 <h2 id="modalTitle" style="color: var(--accent-color);"></h2>
                 <p id="modalOverview" style="margin-top: 0.5rem; color: var(--text-muted);"></p>
@@ -435,9 +395,6 @@
 
         let currentType = 'movie'; 
         let currentItem = null;
-        let currentPage = 1;
-        let isSearching = false;
-        let currentSearchQuery = '';
 
         const moviesGrid = document.getElementById('moviesGrid');
         const searchInput = document.getElementById('searchInput');
@@ -456,7 +413,6 @@
         const genreSelect = document.getElementById('genreSelect');
         const yearSelect = document.getElementById('yearSelect');
         const sortSelect = document.getElementById('sortSelect');
-        const loadMoreContainer = document.getElementById('loadMoreContainer');
 
         function switchType(type) {
             currentType = type;
@@ -475,22 +431,16 @@
                 moviesTab.classList.remove('active');
                 gridTitle.innerText = "المسلسلات المعروضة 🔥";
             }
-            applyFilters(true);
+            applyFilters();
         }
 
-        async function applyFilters(reset = true) {
-            isSearching = false;
-            if (reset) {
-                currentPage = 1;
-                moviesGrid.innerHTML = '';
-            }
-
+        async function applyFilters() {
             const country = countrySelect.value;
             const genre = genreSelect.value;
             const year = yearSelect.value;
             const sort = sortSelect.value;
 
-            let url = `${BASE_URL}/discover/${currentType}?api_key=${API_KEY}&language=ar-SA&include_adult=false&sort_by=${sort}&page=${currentPage}`;
+            let url = `${BASE_URL}/discover/${currentType}?api_key=${API_KEY}&language=ar-SA&include_adult=false&sort_by=${sort}`;
             
             if (country) url += `&with_origin_country=${country}`;
             if (genre) url += `&with_genres=${genre}`;
@@ -502,57 +452,33 @@
             try {
                 const res = await fetch(url);
                 const data = await res.json();
-                displayItems(data.results, reset);
-                toggleLoadMore(data.page < data.total_pages);
+                displayItems(data.results);
             } catch (err) {
                 console.error('Error applying filters:', err);
             }
         }
 
-        async function searchItems(query, reset = true) {
-            isSearching = true;
-            currentSearchQuery = query;
-
+        async function searchItems(query) {
             if (!query) {
-                applyFilters(true);
+                applyFilters();
                 return;
             }
-
-            if (reset) {
-                currentPage = 1;
-                moviesGrid.innerHTML = '';
-            }
-
             gridTitle.innerText = `نتائج البحث عن: ${query}`;
             try {
-                const res = await fetch(`${BASE_URL}/search/${currentType}?api_key=${API_KEY}&language=ar-SA&query=${encodeURIComponent(query)}&page=${currentPage}&include_adult=false`);
+                const res = await fetch(`${BASE_URL}/search/${currentType}?api_key=${API_KEY}&language=ar-SA&query=${encodeURIComponent(query)}&include_adult=false`);
                 const data = await res.json();
-                displayItems(data.results, reset);
-                toggleLoadMore(data.page < data.total_pages);
+                displayItems(data.results);
             } catch (err) {
                 console.error('Error searching:', err);
             }
         }
 
-        function loadNextPage() {
-            currentPage++;
-            if (isSearching) {
-                searchItems(currentSearchQuery, false);
-            } else {
-                applyFilters(false);
-            }
-        }
-
-        function toggleLoadMore(hasMore) {
-            loadMoreContainer.style.display = hasMore ? 'block' : 'none';
-        }
-
-        function displayItems(items, reset = true) {
-            if (reset && (!items || items.length === 0)) {
-                moviesGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 2rem;">لا توجد نتائج تطابق الخيارات المختارة.</p>';
+        function displayItems(items) {
+            moviesGrid.innerHTML = '';
+            if (!items || items.length === 0) {
+                moviesGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 2rem;">لا توجد نتائج تطابق التصنيفات المختارة.</p>';
                 return;
             }
-
             items.forEach(item => {
                 if (!item.poster_path) return;
                 const title = item.title || item.name;
@@ -681,11 +607,15 @@
         searchInput.addEventListener('input', (e) => {
             clearTimeout(timer);
             timer = setTimeout(() => {
-                searchItems(e.target.value.trim(), true);
+                searchItems(e.target.value.trim());
             }, 500);
         });
 
-        applyFilters(true);
+        applyFilters();
     </script>
+
+    <!-- Adsterra Social Bar Ad Unit -->
+    <script src="https://pl30711887.effectivecpmnetwork.com/74/75/dc/7475dc17bdfaa958cfe757c32e833f58.js"></script>
+
 </body>
 </html>
