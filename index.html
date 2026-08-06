@@ -7,11 +7,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #0b0c10;
-            --card-bg: #1f2833;
+            --bg-color: #0b0d12;
+            --card-bg: #151924;
+            --input-bg: #0d1017;
             --accent-color: #66fcf1;
             --text-color: #ffffff;
-            --text-muted: #c5c6c7;
+            --text-muted: #9ba1b0;
             --gold: #f5c518;
         }
 
@@ -29,12 +30,12 @@
         }
 
         header {
-            background: rgba(11, 12, 16, 0.95);
+            background: rgba(11, 13, 18, 0.95);
             position: sticky;
             top: 0;
             z-index: 1000;
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
@@ -48,14 +49,16 @@
             font-weight: 900;
             color: var(--accent-color);
             text-decoration: none;
+            cursor: pointer;
         }
 
         .nav-tabs {
             display: flex;
+            align-items: center;
             gap: 10px;
         }
 
-        .tab-btn {
+        .tab-btn, .home-btn {
             background: var(--card-bg);
             color: var(--text-color);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -66,7 +69,7 @@
             transition: all 0.3s ease;
         }
 
-        .tab-btn.active, .tab-btn:hover {
+        .tab-btn.active, .tab-btn:hover, .home-btn:hover {
             background: var(--accent-color);
             color: #000;
         }
@@ -92,45 +95,96 @@
             font-size: 0.95rem;
         }
 
-        /* Filter Controls Bar */
-        .filter-section {
-            background: #131921;
-            padding: 1rem 2rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            align-items: center;
+        .container {
+            padding: 2rem;
+            max-width: 1300px;
+            margin: 0 auto;
         }
 
-        .filter-group {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .filter-group label {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
-        .filter-group select {
+        /* Modern Filter Section - Matching Reference Image */
+        .filter-card {
             background: var(--card-bg);
-            color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 0.4rem 0.8rem;
-            border-radius: 8px;
-            outline: none;
-            font-size: 0.9rem;
-            cursor: pointer;
+            border-radius: 18px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
         }
 
-        .filter-group select:focus {
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .filter-title {
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: var(--text-color);
+        }
+
+        .reset-btn {
+            background: transparent;
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .reset-btn:hover {
+            background: var(--accent-color);
+            color: #000;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1rem;
+        }
+
+        .select-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .select-wrapper select {
+            width: 100%;
+            background: var(--input-bg);
+            color: var(--text-color);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.8rem 1.2rem;
+            padding-left: 2.5rem;
+            border-radius: 25px;
+            outline: none;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .select-wrapper select:focus {
             border-color: var(--accent-color);
         }
 
-        .container {
-            padding: 2rem;
+        /* Custom Dropdown Arrow Icon */
+        .select-wrapper::after {
+            content: '❯';
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            position: absolute;
+            left: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%) rotate(90deg);
+            pointer-events: none;
         }
 
         .section-title {
@@ -259,7 +313,7 @@
 
         .controls-bar {
             padding: 1rem 1.5rem;
-            background: #131921;
+            background: #10141f;
             border-top: 1px solid rgba(255, 255, 255, 0.05);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             display: flex;
@@ -276,11 +330,11 @@
         }
 
         .controls-bar select {
-            background: var(--card-bg);
+            background: var(--input-bg);
             color: #fff;
             border: 1px solid var(--accent-color);
             padding: 0.4rem 0.8rem;
-            border-radius: 6px;
+            border-radius: 8px;
             outline: none;
             cursor: pointer;
             font-weight: bold;
@@ -302,77 +356,86 @@
 <body>
 
     <header>
-        <a href="#" class="logo">GoodNight 🌙</a>
+        <a class="logo" onclick="resetToHome()">GoodNight 🌙</a>
         <div class="nav-tabs">
             <button class="tab-btn active" id="moviesTab" onclick="switchType('movie')">🎬 أفلام</button>
             <button class="tab-btn" id="tvTab" onclick="switchType('tv')">📺 مسلسلات</button>
+            <button class="home-btn" onclick="resetToHome()">🏠 الرئيسية</button>
         </div>
         <div class="search-box">
             <input type="text" id="searchInput" placeholder="ابحث بالاسم...">
         </div>
     </header>
 
-    <!-- Filter Section -->
-    <div class="filter-section">
-        <div class="filter-group">
-            <label>بلد الإنتاج:</label>
-            <select id="countrySelect" onchange="applyFilters(true)">
-                <option value="">جميع الدول</option>
-                <option value="US">أجنبي / أمريكي 🇺🇸</option>
-                <option value="KR">كوري 🇰🇷</option>
-                <option value="TR">تركي 🇹🇷</option>
-                <option value="IN">هندي 🇮🇳</option>
-                <option value="JP">ياباني 🇯🇵</option>
-                <option value="CN">صيني 🇨🇳</option>
-                <option value="EG,SA,AE,KW">عربي 🇸🇦🇪🇬</option>
-                <option value="GB,FR,ES,DE">أوروبي 🇪🇺</option>
-            </select>
-        </div>
-
-        <div class="filter-group">
-            <label>التصنيف:</label>
-            <select id="genreSelect" onchange="applyFilters(true)">
-                <option value="">جميع التصنيفات</option>
-                <option value="28">أكشن</option>
-                <option value="27">رعب</option>
-                <option value="35">كوميدي</option>
-                <option value="18">دراما</option>
-                <option value="80">جريمة</option>
-                <option value="878">خيال علمي</option>
-                <option value="16">أنيميشن</option>
-                <option value="10749">رومانسي</option>
-                <option value="9648">غموض</option>
-                <option value="53">إثارة</option>
-            </select>
-        </div>
-
-        <div class="filter-group">
-            <label>سنة الإنتاج:</label>
-            <select id="yearSelect" onchange="applyFilters(true)">
-                <option value="">جميع السنوات</option>
-                <option value="2026">2026</option>
-                <option value="2025">2025</option>
-                <option value="2024">2024</option>
-                <option value="2023">2023</option>
-                <option value="2022">2022</option>
-                <option value="2021">2021</option>
-                <option value="2020">2020</option>
-                <option value="2019">2019</option>
-                <option value="2018">2018</option>
-            </select>
-        </div>
-
-        <div class="filter-group">
-            <label>الترتيب حسب:</label>
-            <select id="sortSelect" onchange="applyFilters(true)">
-                <option value="popularity.desc">الأكثر شعبية 🔥</option>
-                <option value="vote_average.desc">الأعلى تقييماً ⭐</option>
-                <option value="primary_release_date.desc">الأحدث إصداراً 🆕</option>
-            </select>
-        </div>
-    </div>
-
     <div class="container">
+
+        <!-- Modern Filter Card -->
+        <div class="filter-card">
+            <div class="filter-header">
+                <h3 class="filter-title">التصفية</h3>
+                <button class="reset-btn" onclick="resetToHome()">🔄 إعادة ضبط / العودة للرئيسية</button>
+            </div>
+            
+            <div class="filter-grid">
+                <!-- Country -->
+                <div class="select-wrapper">
+                    <select id="countrySelect" onchange="applyFilters(true)">
+                        <option value="">كل الأقسام / البلدان</option>
+                        <option value="US">أجنبي / أمريكي 🇺🇸</option>
+                        <option value="KR">كوري 🇰🇷</option>
+                        <option value="TR">تركي 🇹🇷</option>
+                        <option value="IN">هندي 🇮🇳</option>
+                        <option value="JP">ياباني 🇯🇵</option>
+                        <option value="CN">صيني 🇨🇳</option>
+                        <option value="EG,SA,AE,KW">عربي 🇸🇦🇪🇬</option>
+                        <option value="GB,FR,ES,DE">أوروبي 🇪🇺</option>
+                    </select>
+                </div>
+
+                <!-- Genre -->
+                <div class="select-wrapper">
+                    <select id="genreSelect" onchange="applyFilters(true)">
+                        <option value="">كل الأنواع / التصنيفات</option>
+                        <option value="28">أكشن</option>
+                        <option value="27">رعب</option>
+                        <option value="35">كوميدي</option>
+                        <option value="18">دراما</option>
+                        <option value="80">جريمة</option>
+                        <option value="878">خيال علمي</option>
+                        <option value="16">أنيميشن</option>
+                        <option value="10749">رومانسي</option>
+                        <option value="9648">غموض</option>
+                        <option value="53">إثارة</option>
+                    </select>
+                </div>
+
+                <!-- Year -->
+                <div class="select-wrapper">
+                    <select id="yearSelect" onchange="applyFilters(true)">
+                        <option value="">كل السنوات</option>
+                        <option value="2026">2026</option>
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
+                        <option value="2021">2021</option>
+                        <option value="2020">2020</option>
+                        <option value="2019">2019</option>
+                        <option value="2018">2018</option>
+                    </select>
+                </div>
+
+                <!-- Sort -->
+                <div class="select-wrapper">
+                    <select id="sortSelect" onchange="applyFilters(true)">
+                        <option value="popularity.desc">الأعلى شعبية 🔥</option>
+                        <option value="vote_average.desc">الأعلى تقييماً ⭐</option>
+                        <option value="primary_release_date.desc">الأحدث إصداراً 🆕</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
         <h2 class="section-title" id="gridTitle">الأفلام المعروضة 🔥</h2>
         <div class="movies-grid" id="moviesGrid"></div>
         
@@ -474,6 +537,16 @@
             applyFilters(true);
         }
 
+        function resetToHome() {
+            searchInput.value = '';
+            countrySelect.value = '';
+            genreSelect.value = '';
+            yearSelect.value = '';
+            sortSelect.value = 'popularity.desc';
+            switchType('movie');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
         async function applyFilters(reset = true) {
             isSearching = false;
             if (reset) {
@@ -488,7 +561,6 @@
 
             let url = `${BASE_URL}/discover/${currentType}?api_key=${API_KEY}&language=ar-SA&include_adult=false&sort_by=${sort}&page=${currentPage}`;
             
-            // تصفية الأعمال المجهولة واشتراط حد أدنى 150 صوت لضمان جودة وتوفر المحتوى
             if (sort === 'vote_average.desc') {
                 url += `&vote_count.gte=150`;
             }
