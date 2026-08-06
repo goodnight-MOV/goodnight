@@ -407,7 +407,7 @@
             box-shadow: 0 0 15px rgba(229, 9, 20, 0.4);
         }
 
-        /* Modal Player Window */
+        /* Modal Player Window & Rich Details */
         .modal {
             display: none;
             position: fixed;
@@ -424,9 +424,11 @@
             background: var(--card-bg);
             width: 100%;
             max-width: 900px;
-            border-radius: 12px;
-            overflow: hidden;
+            max-height: 90vh;
+            border-radius: 14px;
+            overflow-y: auto;
             position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .close-btn {
@@ -481,7 +483,37 @@
         }
 
         .modal-details {
-            padding: 1.2rem;
+            padding: 1.5rem;
+        }
+
+        /* Modal Metadata Styles */
+        .meta-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 0.8rem 0 1.2rem 0;
+        }
+
+        .meta-pill {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.83rem;
+            font-weight: bold;
+            color: var(--highlight-color);
+        }
+
+        .meta-row {
+            margin-bottom: 0.6rem;
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .meta-row strong {
+            color: #fff;
+            margin-left: 6px;
         }
 
         footer {
@@ -679,9 +711,11 @@
                 </div>
             </div>
 
+            <!-- Enhanced Details Container -->
             <div class="modal-details">
-                <h2 id="modalTitle" style="color: var(--highlight-color);"></h2>
-                <p id="modalOverview" style="margin-top: 0.5rem; color: var(--text-muted);"></p>
+                <h2 id="modalTitle" style="color: var(--highlight-color); font-size: 1.5rem;"></h2>
+                <div id="modalMeta"></div>
+                <p id="modalOverview" style="margin-top: 0.8rem; color: var(--text-muted); line-height: 1.7;"></p>
             </div>
         </div>
     </div>
@@ -708,6 +742,7 @@
         const videoPlayer = document.getElementById('videoPlayer');
         const modalTitle = document.getElementById('modalTitle');
         const modalOverview = document.getElementById('modalOverview');
+        const modalMeta = document.getElementById('modalMeta');
         const gridTitle = document.getElementById('gridTitle');
         const serverSelect = document.getElementById('serverSelect');
         const seasonSelect = document.getElementById('seasonSelect');
@@ -780,14 +815,12 @@
 
             let url = `${BASE_URL}/discover/${currentType}?api_key=${API_KEY}&language=ar-SA&include_adult=false&sort_by=${sort}&page=${currentPage}`;
             
-            // 1. منع ظهور الأعمال غير المعروضة أو المستقبلية (مثل أفلام 2027-2031)
             if (currentType === 'movie') {
                 url += `&primary_release_date.lte=${today}`;
             } else {
                 url += `&first_air_date.lte=${today}`;
             }
 
-            // 2. تصفية الأعمال المجهولة واشتراط حد أدنى للأصوات لضمان وجود سيرفرات بث
             if (sort === 'vote_average.desc') {
                 url += `&vote_count.gte=150`;
             } else if (sort === 'primary_release_date.desc') {
@@ -885,8 +918,12 @@
         async function openPlayer(item) {
             currentItem = item;
             modalTitle.innerText = item.title || item.name;
-            modalOverview.innerText = item.overview || "لا يوجد وصف متاح حالياً.";
+            modalOverview.innerText = item.overview || "لا يوجد وصف متاح حالياً لهذا العمل.";
+            modalMeta.innerHTML = '<p style="color: var(--text-muted); font-size: 0.85rem;">جاري تحميل التفاصيل الكاملة...</p>';
             serverSelect.value = "vidlink";
+
+            // جلب كامل معلومات العمل مع طاقم الممثلين
+            fetchFullDetails(item.id, currentType);
 
             if (currentType === 'tv') {
                 tvControls.style.display = 'flex';
@@ -896,6 +933,67 @@
                 updatePlayerSrc();
             }
             movieModal.style.display = 'flex';
+        }
+
+        async function fetchFullDetails(id, type) {
+            try {
+                const res = await fetch(`${BASE_URL}/${type}/${id}?api_key=${API_KEY}&language=ar-SA&append_to_response=credits`);
+                const data = await res.json();
+
+                const releaseDate = data.release_date || data.first_air_date || 'غير محدد';
+                const year = releaseDate.substring(0, 4);
+                
+                // بلدان الإنتاج
+                let countries = 'غير محدد';
+                if (data.production_countries && data.production_countries.length > 0) {
+                    countries = data.production_countries.map(c => c.name).join('، ');
+                } else if (data.origin_country && data.origin_country.length > 0) {
+                    countries = data.origin_country.join('، ');
+                }
+
+                // التصنيفات
+                const genres = data.genres ? data.genres.map(g => g.name).join('، ') : 'غير محدد';
+
+                // مدة العمل / عدد المواسم
+                let duration = '';
+                if (data.runtime) {
+                    duration = `${data.runtime} دقيقة`;
+                } else if (data.number_of_seasons) {
+                    duration = `${data.number_of_seasons} مواسم (${data.number_of_episodes || ''} حلقة)`;
+                }
+
+                // طاقم الممثلين (أول 6 ممثلين)
+                let cast = 'غير متوفر';
+                if (data.credits && data.credits.cast && data.credits.cast.length > 0) {
+                    cast = data.credits.cast.slice(0, 6).map(c => c.name).join('، ');
+                }
+
+                // المخرج / صانع العمل
+                let director = '';
+                if (type === 'movie' && data.credits && data.credits.crew) {
+                    const dirObj = data.credits.crew.filter(c => c.job === 'Director');
+                    if (dirObj.length > 0) director = dirObj.map(d => d.name).join('، ');
+                } else if (data.created_by && data.created_by.length > 0) {
+                    director = data.created_by.map(c => c.name).join('، ');
+                }
+
+                // بناء HTML التفاصيل
+                modalMeta.innerHTML = `
+                    <div class="meta-pills">
+                        <span class="meta-pill">📅 سنة الإنتاج: ${year}</span>
+                        ${duration ? `<span class="meta-pill">⏱️ المدة: ${duration}</span>` : ''}
+                        <span class="meta-pill">⭐ التقييم: ${data.vote_average ? data.vote_average.toFixed(1) : 'N/A'}</span>
+                    </div>
+
+                    <div class="meta-row"><strong>بلد الإنتاج:</strong> ${countries}</div>
+                    <div class="meta-row"><strong>التصنيف:</strong> ${genres}</div>
+                    ${director ? `<div class="meta-row"><strong>المخرج / الصانع:</strong> ${director}</div>` : ''}
+                    <div class="meta-row"><strong>طاقم التمثيل:</strong> ${cast}</div>
+                `;
+            } catch (err) {
+                console.error('Error fetching details:', err);
+                modalMeta.innerHTML = '';
+            }
         }
 
         async function loadSeasons(tvId) {
