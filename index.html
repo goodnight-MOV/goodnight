@@ -9,6 +9,7 @@
         :root {
             --bg-main: #0e1117;
             --bg-card: #181c26;
+            --drawer-bg: #121620;
             --red-primary: #c81919;
             --red-hover: #e50914;
             --blue-accent: #1e293b;
@@ -40,6 +41,29 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 10px;
+        }
+
+        .top-nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .menu-btn {
+            background: rgba(0, 0, 0, 0.35);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.35rem 0.9rem;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 900;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .menu-btn:hover {
+            background: rgba(0, 0, 0, 0.6);
+            border-color: #fff;
         }
 
         .top-links {
@@ -107,6 +131,114 @@
             gap: 12px;
             color: #fff;
             font-size: 0.85rem;
+        }
+
+        /* Slide Drawer Menu (القائمة الجانبية) */
+        .drawer-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(4px);
+            z-index: 2500;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .drawer-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .drawer {
+            position: fixed;
+            top: 0; right: -320px;
+            width: 300px;
+            height: 100%;
+            background: var(--drawer-bg);
+            z-index: 2600;
+            box-shadow: -5px 0 25px rgba(0, 0, 0, 0.8);
+            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+            padding: 1.5rem 1rem;
+            border-left: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .drawer.active {
+            right: 0;
+        }
+
+        .drawer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .drawer-title {
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: var(--red-primary);
+        }
+
+        .close-drawer {
+            font-size: 1.8rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close-drawer:hover {
+            color: #fff;
+        }
+
+        .menu-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            font-size: 1.05rem;
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 0.6rem;
+            padding-right: 0.5rem;
+            border-right: 3px solid var(--red-primary);
+        }
+
+        .menu-item {
+            display: block;
+            padding: 0.6rem 0.8rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .menu-item:hover {
+            background: rgba(200, 25, 25, 0.2);
+            color: #fff;
+            padding-right: 1.2rem;
+        }
+
+        .menu-item.badge-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .badge-tag {
+            background: var(--gold);
+            color: #000;
+            font-size: 0.72rem;
+            font-weight: 900;
+            padding: 2px 6px;
+            border-radius: 4px;
         }
 
         /* 2. Main Brand & Search Area */
@@ -575,26 +707,81 @@
 </head>
 <body>
 
-    <!-- 1. Top Red Bar with Platforms Dropdown -->
+    <!-- 1. Top Red Bar -->
     <div class="top-nav">
-        <ul class="top-links">
-            <li><a onclick="resetToHome()">الرئيسية</a></li>
-            <li><a onclick="filterCategory('movie')">أفلام</a></li>
-            <li><a onclick="filterCategory('tv')">مسلسلات</a></li>
-            <li><a onclick="filterCategory('anime')">أنمي</a></li>
-            <li class="dropdown">
-                <a>منصات العرض ▾</a>
-                <ul class="dropdown-menu">
-                    <li><a onclick="filterCategory('tv', '', '', '', '213', 'محتوى نتفليكس (Netflix)')">نتفليكس (Netflix)</a></li>
-                    <li><a onclick="filterCategory('tv', '', '', '', '49', 'محتوى HBO')">إتش بي أوه (HBO)</a></li>
-                    <li><a onclick="filterCategory('tv', '', '', '', '2739', 'محتوى ديزني بلس')">ديزني بلس (Disney+)</a></li>
-                    <li><a onclick="filterCategory('tv', '', '', '', '2552', 'محتوى أبل تي في')">أبل تي في (Apple TV+)</a></li>
-                    <li><a onclick="filterCategory('tv', '', '', '', '4', 'محتوى بي بي سي')">بي بي سي (BBC)</a></li>
-                </ul>
-            </li>
-        </ul>
+        <div class="top-nav-right">
+            <button class="menu-btn" onclick="toggleDrawer()">☰ القائمة</button>
+            <ul class="top-links">
+                <li><a onclick="resetToHome()">الرئيسية</a></li>
+                <li><a onclick="filterCategory('movie')">أفلام</a></li>
+                <li><a onclick="filterCategory('tv')">مسلسلات</a></li>
+                <li><a onclick="filterCategory('anime')">أنمي</a></li>
+                <li class="dropdown">
+                    <a>منصات العرض ▾</a>
+                    <ul class="dropdown-menu">
+                        <li><a onclick="filterCategory('tv', '', '', '', '213', 'محتوى نتفليكس (Netflix)')">نتفليكس (Netflix)</a></li>
+                        <li><a onclick="filterCategory('tv', '', '', '', '49', 'محتوى HBO')">إتش بي أوه (HBO)</a></li>
+                        <li><a onclick="filterCategory('tv', '', '', '', '2739', 'محتوى ديزني بلس')">ديزني بلس (Disney+)</a></li>
+                        <li><a onclick="filterCategory('tv', '', '', '', '2552', 'محتوى أبل تي في')">أبل تي في (Apple TV+)</a></li>
+                        <li><a onclick="filterCategory('tv', '', '', '', '4', 'محتوى بي بي سي')">بي بي سي (BBC)</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
         <div class="social-pill">
             <span>GoodNight TV</span>
+        </div>
+    </div>
+
+    <!-- Side Drawer Menu (القائمة الجانبية) -->
+    <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
+    <div class="drawer" id="sideDrawer">
+        <div class="drawer-header">
+            <span class="drawer-title">أقسام الموقع</span>
+            <span class="close-drawer" onclick="toggleDrawer()">&times;</span>
+        </div>
+
+        <!-- Section 1: Latest -->
+        <div class="menu-section">
+            <a class="menu-item" onclick="filterCategory('latest')">المضاف حديثاً (أحدث الإضافات)</a>
+        </div>
+
+        <!-- Section 2: Streaming Platforms -->
+        <div class="menu-section">
+            <div class="section-header">منصات العرض العالمية</div>
+            <a class="menu-item" onclick="filterCategory('tv', '', '', '', '213', 'محتوى نتفليكس (Netflix)')">نتفليكس (Netflix)</a>
+            <a class="menu-item" onclick="filterCategory('tv', '', '', '', '49', 'محتوى HBO')">إتش بي أوه (HBO)</a>
+            <a class="menu-item" onclick="filterCategory('tv', '', '', '', '2739', 'محتوى ديزني بلس (Disney+)')">ديزني بلس (Disney+)</a>
+            <a class="menu-item" onclick="filterCategory('tv', '', '', '', '2552', 'محتوى أبل تي في (Apple TV+)')">أبل تي في (Apple TV+)</a>
+            <a class="menu-item" onclick="filterCategory('tv', '', '', '', '4', 'محتوى بي بي سي (BBC)')">بي بي سي (BBC)</a>
+        </div>
+
+        <!-- Section 3: Movies -->
+        <div class="menu-section">
+            <div class="section-header">الأفلام</div>
+            <a class="menu-item" onclick="filterCategory('movie', 'US')">أفلام أجنبية</a>
+            <a class="menu-item" onclick="filterCategory('movie', 'JP', '16')">أفلام أنمي</a>
+            <a class="menu-item" onclick="filterCategory('movie', 'KR,CN,TH')">أفلام آسيوية</a>
+            <a class="menu-item" onclick="filterCategory('movie', 'IN')">أفلام هندية</a>
+            <a class="menu-item" onclick="filterCategory('movie', 'EG,SA,AE,KW')">أفلام عربية</a>
+            <a class="menu-item badge-item" onclick="filterCategory('movie', '', '', 'vote_average.desc')">
+                <span>الأفلام الأعلى تقييماً</span>
+                <span class="badge-tag">IMDb</span>
+            </a>
+        </div>
+
+        <!-- Section 4: TV Series -->
+        <div class="menu-section">
+            <div class="section-header">المسلسلات</div>
+            <a class="menu-item" onclick="filterCategory('tv', 'US,GB')">مسلسلات أجنبية</a>
+            <a class="menu-item" onclick="filterCategory('tv', 'KR,CN')">القسم الآسيوي (كوري / صيني)</a>
+            <a class="menu-item" onclick="filterCategory('tv', 'JP', '16')">مسلسلات الأنمي</a>
+            <a class="menu-item" onclick="filterCategory('tv', 'TR')">مسلسلات تركية</a>
+            <a class="menu-item" onclick="filterCategory('tv', 'EG,SA,AE,KW')">مسلسلات عربية</a>
+            <a class="menu-item badge-item" onclick="filterCategory('tv', '', '', 'vote_average.desc')">
+                <span>المسلسلات الأعلى تقييماً</span>
+                <span class="badge-tag">IMDb</span>
+            </a>
         </div>
     </div>
 
@@ -758,6 +945,13 @@
         const yearSelect = document.getElementById('yearSelect');
         const sortSelect = document.getElementById('sortSelect');
         const loadMoreBtn = document.getElementById('loadMoreBtn');
+        const sideDrawer = document.getElementById('sideDrawer');
+        const drawerOverlay = document.getElementById('drawerOverlay');
+
+        function toggleDrawer() {
+            sideDrawer.classList.toggle('active');
+            drawerOverlay.classList.toggle('active');
+        }
 
         function scrollSlider(amount) {
             sliderContainer.scrollBy({ left: amount, behavior: 'smooth' });
@@ -796,6 +990,7 @@
 
         function filterCategory(type, country = '', genre = '', sort = '', network = '', customTitle = '') {
             currentNetwork = network;
+            if (sideDrawer && sideDrawer.classList.contains('active')) toggleDrawer();
 
             document.querySelectorAll('.quick-btn').forEach(btn => btn.classList.remove('active'));
             if (type === 'latest') document.getElementById('btnLatest').classList.add('active');
@@ -949,7 +1144,6 @@
             modalOverview.innerText = item.overview || "لا يوجد وصف متاح حالياً لهذا العمل.";
             modalMeta.innerHTML = '<p style="color: var(--text-muted); font-size: 0.85rem;">جاري تحميل التفاصيل...</p>';
             
-            // اختيار السيرفر الافتراضي
             serverSelect.value = "vidlink";
 
             fetchFullDetails(item.id, currentType);
@@ -1092,7 +1286,6 @@
             }
         }
 
-        // Updated with 10 Streaming Servers
         function updatePlayerSrc() {
             if (!currentItem) return;
             const server = serverSelect.value;
