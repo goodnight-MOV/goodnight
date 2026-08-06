@@ -532,7 +532,7 @@
             <a class="menu-item" onclick="filterCategory('latest')">المضاف حديثاً (أحدث الإضافات)</a>
         </div>
 
-        <!-- Section 2: Streaming Networks (منصات العرض) -->
+        <!-- Section 2: Streaming Networks -->
         <div class="menu-section">
             <div class="section-header">منصات العرض العالمية</div>
             <a class="menu-item" onclick="filterCategory('tv', '', '', '', '213', 'محتوى نتفليكس (Netflix)')">نتفليكس (Netflix)</a>
@@ -776,15 +776,26 @@
             const genre = genreSelect.value;
             const year = yearSelect.value;
             const sort = sortSelect.value;
+            const today = new Date().toISOString().split('T')[0];
 
             let url = `${BASE_URL}/discover/${currentType}?api_key=${API_KEY}&language=ar-SA&include_adult=false&sort_by=${sort}&page=${currentPage}`;
             
-            if (currentNetwork) {
-                url += `&with_networks=${currentNetwork}`;
+            // 1. منع ظهور الأعمال غير المعروضة أو المستقبلية (مثل أفلام 2027-2031)
+            if (currentType === 'movie') {
+                url += `&primary_release_date.lte=${today}`;
+            } else {
+                url += `&first_air_date.lte=${today}`;
             }
 
+            // 2. تصفية الأعمال المجهولة واشتراط حد أدنى للأصوات لضمان وجود سيرفرات بث
             if (sort === 'vote_average.desc') {
                 url += `&vote_count.gte=150`;
+            } else if (sort === 'primary_release_date.desc') {
+                url += `&vote_count.gte=20`;
+            }
+
+            if (currentNetwork) {
+                url += `&with_networks=${currentNetwork}`;
             }
 
             if (country) url += `&with_origin_country=${country}`;
