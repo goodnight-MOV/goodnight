@@ -413,6 +413,66 @@
         .arrow-left { left: 10px; }
         .arrow-right { right: 10px; }
 
+        /* App Install Top Notice Banner */
+        .app-install-banner {
+            background: linear-gradient(90deg, #181c26 0%, #1e293b 100%);
+            border: 1px solid rgba(245, 197, 24, 0.3);
+            border-radius: 12px;
+            padding: 0.8rem 1.2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .app-install-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .app-icon-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--red-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .app-install-text strong {
+            display: block;
+            color: #fff;
+            font-size: 0.95rem;
+        }
+
+        .app-install-text span {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .app-install-btn {
+            background: var(--gold);
+            color: #000;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 20px;
+            font-weight: 900;
+            font-size: 0.85rem;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: transform 0.2s;
+        }
+
+        .app-install-btn:hover {
+            transform: scale(1.05);
+        }
+
         /* Quick Action Buttons Grid */
         .quick-buttons {
             display: grid;
@@ -788,6 +848,13 @@
                 flex-direction: column;
                 text-align: center;
             }
+            .app-install-banner {
+                flex-direction: column;
+                text-align: center;
+            }
+            .app-install-info {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -823,7 +890,7 @@
     <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
     <div class="drawer" id="sideDrawer">
         <div class="drawer-header">
-            <span class="drawer-title">أقسام الموقع</span>
+            <span class="drawer-title">أقسان الموقع</span>
             <span class="close-drawer" onclick="toggleDrawer()">&times;</span>
         </div>
 
@@ -877,6 +944,18 @@
     </div>
 
     <div class="main-container">
+
+        <!-- App Install Professional Banner -->
+        <div class="app-install-banner" id="appInstallBanner">
+            <div class="app-install-info">
+                <div class="app-icon-img">🌙</div>
+                <div class="app-install-text">
+                    <strong>شاهد عبر تطبيق GoodNight الجوال المباشر</strong>
+                    <span>تصفح أسرع، مشاهدة ملء الشاشة، وبدون الحاجة لفتح المتصفح في كل مرة.</span>
+                </div>
+            </div>
+            <button class="app-install-btn" onclick="triggerAppInstall()">📱 تثبيت التطبيق مجاناً</button>
+        </div>
 
         <!-- 3. Featured Slider -->
         <div class="slider-section">
@@ -1031,6 +1110,7 @@
         let currentPage = 1;
         let isSearching = false;
         let currentSearchQuery = '';
+        let deferredPrompt = null;
 
         const moviesGrid = document.getElementById('moviesGrid');
         const sliderContainer = document.getElementById('sliderContainer');
@@ -1063,6 +1143,41 @@
         function acceptCookies() {
             localStorage.setItem('cookiesAccepted', 'true');
             cookieBanner.style.display = 'none';
+        }
+
+        // PWA Installation Trigger
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+        });
+
+        function triggerAppInstall() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted the app install');
+                    }
+                    deferredPrompt = null;
+                });
+            } else {
+                legalModalContent.innerHTML = `
+                    <h3>📱 طريقة تثبيت تطبيق GoodNight على جوالك</h3>
+                    <p>يمكنك تحويل الموقع إلى تطبيق شاشتك الرئيسية بسهولة وخلال ثوانٍ:</p>
+                    <div style="background:#0d1017; padding:1rem; border-radius:10px; margin-bottom:1rem; line-height:1.8;">
+                        <strong style="color:var(--gold);">🍎 على أجهزة آيفون (iPhone / Safari):</strong><br>
+                        1. اضغط على زر المشاركة <strong>( ⎋ )</strong> أسفل الشاشة.<br>
+                        2. اختر <strong>"إضافة إلى الشاشة الرئيسية" (Add to Home Screen)</strong>.<br>
+                        3. اضغط على <strong>إضافة (Add)</strong> في الأعلى.
+                    </div>
+                    <div style="background:#0d1017; padding:1rem; border-radius:10px; line-height:1.8;">
+                        <strong style="color:var(--gold);">🤖 على أجهزة أندرويد (Android / Chrome):</strong><br>
+                        1. اضغط على نقاط القائمة الثلاث <strong>( 👤 / 📱 )</strong> أعلى اليمين.<br>
+                        2. اختر <strong>"تثبيت التطبيق" (Install App)</strong> أو "إضافة للرئيسية".
+                    </div>
+                `;
+                legalModal.style.display = 'flex';
+            }
         }
 
         function openLegalModal(type) {
