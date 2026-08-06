@@ -279,6 +279,23 @@
 
     <!-- Filter Section -->
     <div class="filter-section">
+        <!-- Country Filter -->
+        <div class="filter-group">
+            <label>بلد الإنتاج:</label>
+            <select id="countrySelect" onchange="applyFilters()">
+                <option value="">جميع الدول</option>
+                <option value="US">أجنبي / أمريكي 🇺🇸</option>
+                <option value="KR">كوري 🇰🇷</option>
+                <option value="TR">تركي 🇹🇷</option>
+                <option value="IN">هندي 🇮🇳</option>
+                <option value="JP">ياباني 🇯🇵</option>
+                <option value="CN">صيني 🇨🇳</option>
+                <option value="EG,SA,AE,KW">عربي 🇸🇦🇪🇬</option>
+                <option value="GB,FR,ES,DE">أوروبي 🇪🇺</option>
+            </select>
+        </div>
+
+        <!-- Genre Filter -->
         <div class="filter-group">
             <label>التصنيف:</label>
             <select id="genreSelect" onchange="applyFilters()">
@@ -296,6 +313,7 @@
             </select>
         </div>
 
+        <!-- Year Filter -->
         <div class="filter-group">
             <label>سنة الإنتاج:</label>
             <select id="yearSelect" onchange="applyFilters()">
@@ -312,6 +330,7 @@
             </select>
         </div>
 
+        <!-- Sort Filter -->
         <div class="filter-group">
             <label>الترتيب حسب:</label>
             <select id="sortSelect" onchange="applyFilters()">
@@ -323,7 +342,7 @@
     </div>
 
     <div class="container">
-        <h2 class="section-title" id="gridTitle">الأفلام الأكثر شعبية 🔥</h2>
+        <h2 class="section-title" id="gridTitle">الأفلام المعروضة 🔥</h2>
         <div class="movies-grid" id="moviesGrid"></div>
     </div>
 
@@ -374,7 +393,7 @@
         const BASE_URL = 'https://api.themoviedb.org/3';
         const IMG_URL = 'https://image.tmdb.org/t/p/w500';
 
-        let currentType = 'movie'; // 'movie' or 'tv'
+        let currentType = 'movie'; 
         let currentItem = null;
 
         const moviesGrid = document.getElementById('moviesGrid');
@@ -390,6 +409,7 @@
         const tvControls = document.getElementById('tvControls');
         const moviesTab = document.getElementById('moviesTab');
         const tvTab = document.getElementById('tvTab');
+        const countrySelect = document.getElementById('countrySelect');
         const genreSelect = document.getElementById('genreSelect');
         const yearSelect = document.getElementById('yearSelect');
         const sortSelect = document.getElementById('sortSelect');
@@ -397,6 +417,7 @@
         function switchType(type) {
             currentType = type;
             searchInput.value = '';
+            countrySelect.value = '';
             genreSelect.value = '';
             yearSelect.value = '';
             sortSelect.value = 'popularity.desc';
@@ -414,12 +435,14 @@
         }
 
         async function applyFilters() {
+            const country = countrySelect.value;
             const genre = genreSelect.value;
             const year = yearSelect.value;
             const sort = sortSelect.value;
 
             let url = `${BASE_URL}/discover/${currentType}?api_key=${API_KEY}&language=ar-SA&include_adult=false&sort_by=${sort}`;
             
+            if (country) url += `&with_origin_country=${country}`;
             if (genre) url += `&with_genres=${genre}`;
             if (year) {
                 if (currentType === 'movie') url += `&primary_release_year=${year}`;
@@ -453,7 +476,7 @@
         function displayItems(items) {
             moviesGrid.innerHTML = '';
             if (!items || items.length === 0) {
-                moviesGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 2rem;">لا توجد نتائج تطابق التصنيف المختار.</p>';
+                moviesGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 2rem;">لا توجد نتائج تطابق التصنيفات المختارة.</p>';
                 return;
             }
             items.forEach(item => {
